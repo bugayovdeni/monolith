@@ -1,3 +1,69 @@
+/* Настройки заголовка окна - КРАСНЫЙ ЦВЕТ */
+.titlebar {
+  height: 40px; /* Чуть выше для удобства */
+  background: #cc0000; /* Ярко-красный */
+  user-select: none;
+  display: flex; /* Используем flex вместо grid для простоты */
+  justify-content: space-between; /* Распределяем область драга и кнопки */
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Чтобы был поверх всего */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Область для перетаскивания должна занимать свободное место слева */
+.titlebar > div[data-tauri-drag-region] {
+  flex-grow: 1;
+  height: 100%;
+  cursor: default;
+}
+
+.titlebar > .controls {
+  display: flex;
+  height: 100%;
+}
+
+.titlebar button {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px; /* Квадратные кнопки */
+  height: 100%;
+  background-color: transparent;
+  color: white; /* Иконки белые */
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+/* Эффекты при наведении */
+.titlebar button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Особый стиль для кнопки закрытия - становится ярко-красной при наведении */
+#titlebar-close:hover {
+  background: #ff0000; 
+}
+
+/* Отступ для основного контента, чтобы titlebar его не перекрывал */
+.container {
+  margin: 0;
+  padding-top: 50px; /* Больше отступа сверху */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  height: calc(100vh - 40px); /* Компенсируем высоту titlebar */
+  box-sizing: border-box;
+}
+
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
 }
@@ -58,6 +124,11 @@ a:hover {
 
 h1 {
   text-align: center;
+  user-select: none;
+}
+
+p{
+  user-select: none;
 }
 
 input,

@@ -1,4 +1,28 @@
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWindow } from '@tauri-apps/api/window';
+
+// when using `"withGlobalTauri": true`, you may use
+// const { getCurrentWindow } = window.__TAURI__.window;
+
+const appWindow = getCurrentWindow();
+
+// Функция-помощник для навешивания событий
+function bindWindowAction(id: string, action: () => Promise<void>) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.addEventListener('click', () => {
+      action().catch((err) => console.error(`Ошибка ${id}:`, err));
+    });
+  } else {
+    console.warn(`Элемент ${id} не найден`);
+  }
+}
+
+// Привязываем действия
+bindWindowAction('titlebar-minimize', () => appWindow.minimize());
+bindWindowAction('titlebar-maximize', () => appWindow.toggleMaximize());
+bindWindowAction('titlebar-close', () => appWindow.close());
+
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
