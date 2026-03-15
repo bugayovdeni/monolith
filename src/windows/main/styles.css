@@ -1,32 +1,132 @@
-/* Настройки заголовка окна - КРАСНЫЙ ЦВЕТ */
+/* === БАЗОВЫЕ НАСТРОЙКИ === */
+body {
+  margin: 0;
+  padding: 0;
+  background: #1e1e1e;
+  color: #fff;
+  font-family: monospace;
+  overflow: hidden;
+}
+
+/* === TITLEBAR === */
 .titlebar {
-  height: 40px; /* Чуть выше для удобства */
-  background: #cc0000; /* Ярко-красный */
+  height: 40px;
+  /* ИЗМЕНЕНИЕ: Делаем фон темным (#1e1e1e), чтобы кнопки минимизации были незаметны */
+  background: #1e1e1e; 
   user-select: none;
-  display: flex; /* Используем flex вместо grid для простоты */
-  justify-content: space-between; /* Распределяем область драга и кнопки */
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000; /* Чтобы был поверх всего */
+  z-index: 1000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-bottom: 1px solid #333; /* Optional: тонкая рамка снизу для разделения */
 }
 
-/* Область для перетаскивания должна занимать свободное место слева */
+
+/* === ЗОНА ПЕРЕТАСКИВАНИЯ (ГЛАВНОЕ ИСПРАВЛЕНИЕ) === */
+/* Мы явно прописываем pointer-events: auto, чтобы перебить любые наследования */
 .titlebar > div[data-tauri-drag-region] {
   flex-grow: 1;
   height: 100%;
-  cursor: default;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  cursor: grab; /* Показываем, что можно тащить */
+  pointer-events: auto; /* ВАЖНО: Включаем события явно! */
 }
 
-.titlebar > .controls {
+/* Если пользователь нажал кнопку мыши - курсор меняется */
+.titlebar > div[data-tauri-drag-region]:active {
+  cursor: grabbing;
+}
+
+/* === ЛОГОТИП === */
+.app-identity {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 20;
+  /* Важно: логотип НЕ должен блокировать события, если мы хотим тащить за него */
+  pointer-events: none; /* Пропускаем клики сквозь лого на родительский div[data-tauri-drag-region] */
+}
+
+/* Но если вы хотите тащить именно за лого, лучше убрать pointer-events: none выше.
+   Однако, так как лого лежит ВНУТРИ div[data-tauri-drag-region], 
+   то даже с pointer-events: none событие должно всплыть к родителю в Tauri.
+   Если не работает - попробуйте закомментировать строку ниже: */
+/* pointer-events: none;  <-- РАСКОММЕНТИРУЙТЕ ЭТУ СТРОКУ, ЕСЛИ НЕ РАБОТАЕТ */
+
+.app-logo {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+.app-name {
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+/* === БЕГУЩАЯ СТРОКА === */
+.marquee-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #2d2d2d;
+  border-bottom: 2px solid #00ff00;
+  padding-left: 160px; /* Отступ под лого */
+  box-sizing: border-box;
+  /* ВАЖНО: Строка тоже не должна блокировать драг, если мы тащим за неё */
+  pointer-events: none; /* Пропускаем клики сквозь контейнер строки на родителя */
+}
+
+.marquee-track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll-left 15s linear infinite;
+  /* Текст внутри тоже пропускает клики */
+  pointer-events: none; 
+}
+
+.marquee-content {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* === КНОПКИ === */
+.controls {
   display: flex;
   height: 100%;
+  flex-shrink: 0;
+  z-index: 30;
 }
 
-.titlebar button {
+.controls button {
   appearance: none;
   padding: 0;
   margin: 0;
@@ -34,154 +134,79 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 40px; /* Квадратные кнопки */
+  width: 46px;
   height: 100%;
-  background-color: transparent;
-  color: white; /* Иконки белые */
-  transition: background 0.2s;
+  /* По умолчанию прозрачные, чтобы было видно темный фон titlebar */
+  background-color: transparent; 
+  color: #ffffff;
+  transition: all 0.2s ease;
   cursor: pointer;
+  pointer-events: auto;
+  outline: none;
 }
 
-/* Эффекты при наведении */
-.titlebar button:hover {
-  background: rgba(255, 255, 255, 0.2);
+.controls button svg {
+  fill: currentColor;
+  width: 16px;
+  height: 16px;
 }
 
-/* Особый стиль для кнопки закрытия - становится ярко-красной при наведении */
+/* === КНОПКИ - РАЗНЫЕ ЦВЕТА ВСЕГДА === */
+
+/* --- 1. СВЕРНУТЬ (MINIMIZE) - ЗЕЛЕНЫЙ --- */
+#titlebar-minimize {
+   background-color: rgba(149, 230, 149, 0.455); /* Теперь виден бледно-зеленый квадрат */
+  color: #4ade80; /* Ярко-зеленая иконка ВСЕГДА */
+}
+#titlebar-minimize:hover {
+  background-color: rgba(81, 227, 81, 0.455); /* Легкий зеленый фон при наведении */
+  color: #4ade80; /* Иконка остается зеленой */
+}
+#titlebar-minimize:active {
+  background-color: rgba(222, 190, 74, 0.4); /* Темнее при клике */
+  color: #fff;
+}
+
+/* --- 2. РАЗВЕРНУТЬ (MAXIMIZE) - ГОЛУБОЙ --- */
+#titlebar-maximize {
+  background-color: rgba(227, 152, 12, 0.3); /* Теперь виден бледно-голубой квадрат */
+  color: #38bdf8; /* Ярко-голубая иконка ВСЕГДА */
+}
+#titlebar-maximize:hover {
+  background-color: rgba(227, 152, 12, 0.3); /* Легкий голубой фон при наведении */
+  color: #38bdf8; /* Иконка остается голубой */
+}
+#titlebar-maximize:active {
+  background-color: rgba(56, 189, 248, 0.4); /* Темнее при клике */
+  color: #fff;
+}
+
+/* --- 3. ЗАКРЫТЬ (CLOSE) - КРАСНЫЙ --- */
+#titlebar-close {
+  background-color: #9f1239; /* Темно-красный фон ВСЕГДА */
+  color: #fb7185; /* Светло-красная иконка ВСЕГДА */
+}
 #titlebar-close:hover {
-  background: #ff0000; 
+  background-color: #e11d48; /* Ярко-красный фон при наведении */
+  color: #fff; /* Белая иконка для контраста */
 }
-
-/* Отступ для основного контента, чтобы titlebar его не перекрывал */
+#titlebar-close:active {
+  background-color: #be123c; /* Еще темнее при клике */
+  color: #fff;
+}
+/* === КОНТЕНТ === */
 .container {
   margin: 0;
-  padding-top: 50px; /* Больше отступа сверху */
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  height: calc(100vh - 40px); /* Компенсируем высоту titlebar */
+  height: calc(100vh - 40px);
   box-sizing: border-box;
-}
-
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
-
-.logo.typescript:hover {
-  filter: drop-shadow(0 0 2em #2d79c7);
-}
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-
-  color: #0f0f0f;
-  background-color: #f6f6f6;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
 }
 
 h1 {
   text-align: center;
   user-select: none;
-}
-
-p{
-  user-select: none;
-}
-
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
-
-input,
-button {
-  outline: none;
-}
-
-#greet-input {
-  margin-right: 5px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
-
-  a:hover {
-    color: #24c8db;
-  }
-
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-  button:active {
-    background-color: #0f0f0f69;
-  }
 }
