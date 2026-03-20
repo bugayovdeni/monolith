@@ -59,12 +59,7 @@ body {
   pointer-events: none; /* Пропускаем клики сквозь лого на родительский div[data-tauri-drag-region] */
 }
 
-/* Но если вы хотите тащить именно за лого, лучше убрать pointer-events: none выше.
-   Однако, так как лого лежит ВНУТРИ div[data-tauri-drag-region], 
-   то даже с pointer-events: none событие должно всплыть к родителю в Tauri.
-   Если не работает - попробуйте закомментировать строку ниже: */
-/* pointer-events: none;  <-- РАСКОММЕНТИРУЙТЕ ЭТУ СТРОКУ, ЕСЛИ НЕ РАБОТАЕТ */
-
+/*Тащим за Logo */
 .app-logo {
   width: 24px;
   height: 24px;
@@ -195,7 +190,7 @@ body {
   color: #fff;
 }
 /* === КОНТЕНТ === */
-.container {
+/* .container {
   margin: 0;
   padding-top: 50px;
   display: flex;
@@ -204,9 +199,113 @@ body {
   text-align: center;
   height: calc(100vh - 40px);
   box-sizing: border-box;
+} */
+
+.container {
+  display: flex;
+  gap: 10px;
+  height: calc(100dvh - 40px);
+  overflow: hidden;
+  position: relative;
+  /* Убедись, что у контейнера нет min-width, который мешает */
+  min-width: 0; 
 }
 
-h1 {
-  text-align: center;
-  user-select: none;
+/* === ГРАФИКИ === */
+#chart-container {
+  flex: 1;              /* Занимает всё свободное */
+  min-width: 0;         /* 🔥 ВАЖНО: Разрешаем сжиматься, когда сайдбар лезет обратно */
+  width: 100%;          /* Чтобы график понимал границы */
+  background: #f0f0f0;
+  overflow: hidden;     /* На всякий случай */
 }
+
+/* === САЙДБАР === */
+/* === САЙДБАР === */
+#sidebar {
+  /* Размеры */
+  flex: 0 0 200px;
+  min-width: 0;
+  
+  /* 🔥 Критично: разрешаем кнопке вылезать за границы */
+  overflow: visible; 
+  position: relative; /* Чтобы кнопка позиционировалась относительно сайдбара */
+  
+  /* Анимация */
+  transition: flex 0.3s ease, opacity 0.3s ease;
+  
+  /* Фон */
+  background: #2d2d2d; /* Темный фон под VS */
+  border-left: 1px solid #333;
+}
+
+/* Скрытое состояние */
+#sidebar.hidden {
+  flex: 0 0 0;          /* 🔥 База = 0, место освобождается */
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  border-width: 0;
+}
+/* === КОНТЕНТ ВНУТРИ (чтобы не тек) === */
+.sidebar-content {
+  overflow: hidden; /* 🔥 Режем текст */
+  white-space: nowrap;
+  padding: 10px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* === КНОПКА-ВКЛАДКА === */
+.toggle-btn {
+  position: absolute;
+  left: 0; /* Прижата к левому краю сайдбара */
+  top: 50%;
+  transform: translateY(-50%) translateX(-100%); /* Выносим влево за пределы */
+  
+  /* Стили кнопки */
+  width: 30px;
+  height: 60px;
+  background: #333;
+  border: 1px solid #555;
+  border-right: none; /* Прилипает к сайдбару */
+  border-radius: 4px 0 0 4px;
+  cursor: pointer;
+  z-index: 100; /* 🔥 Чтобы была поверх графика */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  
+  /* Чтобы не мерцала при анимации */
+  transition: background 0.2s;
+}
+.toggle-btn:hover {
+  background: #444;
+}
+
+/* === СКРЫТОЕ СОСТОЯНИЕ === */
+#sidebar.hidden {
+  flex: 0 0 0; /* Схлопываем ширину */
+  opacity: 1; /* 🔥 Не скрываем opacity, иначе кнопка исчезнет! */
+}
+
+/* Скрываем только контент, кнопка остается */
+#sidebar.hidden .sidebar-content {
+  opacity: 0;
+}
+
+/* === ГРАФИКИ === */
+/*#chart-container{
+    width: 100%;
+    height: 100dvh; /* Без высоты график не отрисуются, запомни это */
+   /* background: #ffff;
+    border-radius: 8px;
+}*/
+/* #chart-container {
+    width: 100%;
+    height: calc(100dvh - 40px); 
+    background: #ffff;
+    border-radius: 8px;
+} */

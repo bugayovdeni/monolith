@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/src/windows/main/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
+    <title>Monolith</title>
+    <!-- <title>Tauri App</title> -->
     <script type="module" src="/src/windows/main/main.ts" defer></script>
   </head>
 
@@ -13,15 +14,11 @@
       <!-- Зона перетаскивания -->
       <div data-tauri-drag-region class="drag-region-content">
         
-        <!-- НОВОЕ: Логотип и Название -->
+        <!-- Логотип и Название -->
         <div class="app-identity">
-          <!-- Эмблема (SVG иконка Rust/Tauri для примера) -->
-          <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-            <circle cx="50" cy="50" r="45" stroke="#dea584" stroke-width="8"/>
-            <path d="M50 20 L65 60 L50 80 L35 60 Z" fill="#dea584"/>
-            <circle cx="50" cy="50" r="15" fill="#fff"/>
-          </svg>
-          <span class="app-name">MONOLITH <span style="font-size: 0.7em; opacity: 0.7;">v1.0</span></span>
+          <!-- Эмблема -->
+          <img src="" alt="Monolith Logo" class="app-logo" /> 
+          <span class="app-name">MONOLITH<span style="font-size: 0.7em; opacity: 0.7;">v1.0</span></span>
         </div>        
       
         <!-- Дорожка -->
@@ -31,7 +28,7 @@
             <div class="marquee-track">
                 <!-- Текст. Чтобы было бесшовно, его надо продублировать, но для примера хватит одного -->
                 <span class="marquee-content">
-                    АСУ ТП — это боль, .NET — это память, Rust — это жизнь, а CSS — это ебучая магия. &nbsp;&nbsp;&nbsp;
+                    АСУ ТП — это боль, .NET — это память, Rust — это жизнь, а CSS — это магия. &nbsp;&nbsp;&nbsp;
                 </span>
             </div>
         </div>
@@ -74,38 +71,25 @@
               />
             </svg>
           </button>
-        </div>
-      
+        </div>      
     </div>
-    <main class="container">
-       <h1>Welcome to Monolith</h1>
+    <main class="container">      
+      <div id="chart-container"></div>
+      <div id="sidebar">
+        <!-- Кнопка теперь внутри, но позиционируется абсолютно -->
+        <button class="toggle-btn">
+          <!-- Иконка стрелки, чтобы было понятно -->
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
 
-      <!-- <div class="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/src/assets/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img
-            src="/src/assets/tauri.svg"
-            class="logo tauri"
-            alt="Tauri logo"
-          />
-        </a>
-        <a href="https://www.typescriptlang.org/docs" target="_blank">
-          <img
-            src="/src/assets/typescript.svg"
-            class="logo typescript"
-            alt="typescript logo"
-          />
-        </a>
+        <!-- Контент, который будет обрезаться -->
+        <div class="sidebar-content">
+          <p>Тут какая-то херня сбоку</p>
+          <p>Которая исчезает</p>
+        </div>
       </div>
-      <p>Click on the Tauri logo to learn more about the framework</p>
-
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-      <p id="greet-msg"></p>  -->
     </main>
   </body>
 </html>

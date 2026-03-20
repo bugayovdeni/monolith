@@ -1,10 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { ChartManager } from '../charts/chart-manager';
+import logoSrc from '../../assets/monolith.svg';
 
 // when using `"withGlobalTauri": true`, you may use
 // const { getCurrentWindow } = window.__TAURI__.window;
 
 const appWindow = getCurrentWindow();
+const chart = new ChartManager ('chart-container');
 
 // Функция-помощник для навешивания событий
 function bindWindowAction(id: string, action: () => Promise<void>) {
@@ -42,5 +45,30 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
     e.preventDefault();
     greet();
+  });
+  const logo = document.querySelector('.app-logo') as HTMLImageElement
+  if (logo) {
+    logo.src = logoSrc
+  }
+});
+
+// ==== ГРАФИКИ ==
+setInterval(() => {
+  const now = Date.now();
+
+  chart.updateData(
+    [now, Math.random() * 100],
+    [now, Math.random() * 50]
+  );
+}, 1000);
+
+// ==== Side Bar ===
+window.addEventListener('DOMContentLoaded', () => {
+  const sidebar = document.getElementById('sidebar')!;
+  const btn = document.querySelector('.toggle-btn') as HTMLButtonElement;
+
+  btn.addEventListener('click', () => {
+    console.log('Toggle, current classes:', sidebar.classList);
+    sidebar.classList.toggle('hidden');
   });
 });
