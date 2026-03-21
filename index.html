@@ -5,73 +5,28 @@
     <link rel="stylesheet" href="/src/windows/main/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monolith</title>
-    <!-- <title>Tauri App</title> -->
     <script type="module" src="/src/windows/main/main.ts" defer></script>
   </head>
 
   <body>
-    <div class="titlebar">    
-      <!-- Зона перетаскивания -->
-      <div data-tauri-drag-region class="drag-region-content">
-        
-        <!-- Логотип и Название -->
-        <div class="app-identity">
-          <!-- Эмблема -->
-          <img src="" alt="Monolith Logo" class="app-logo" /> 
-          <span class="app-name">MONOLITH<span style="font-size: 0.7em; opacity: 0.7;">v1.0</span></span>
-        </div>        
+    <div class="titlebar">        
+      <!-- Логотип и Название -->
+      <div class="app-identity">
+        <!-- Эмблема -->
+        <img src="" alt="Monolith Logo" class="app-logo" /> 
+        <span class="app-name">MONOLITH<span style="font-size: 0.7em; opacity: 0.7;">v1.0</span></span>
+      </div>        
       
-        <!-- Дорожка -->
-            <!-- Контейнер, который режет всё лишнее -->
-        <div class="marquee-container">
-            <!-- Дорожка, которая будет ездить -->
-            <div class="marquee-track">
-                <!-- Текст. Чтобы было бесшовно, его надо продублировать, но для примера хватит одного -->
-                <span class="marquee-content">
-                    АСУ ТП — это боль, .NET — это память, Rust — это жизнь, а CSS — это магия. &nbsp;&nbsp;&nbsp;
-                </span>
-            </div>
-        </div>
+      <!-- Дорожка -->
+          <!-- Контейнер, который режет всё лишнее -->
+      <div class="marquee-container">
+          <!-- Дорожка, которая будет ездить -->
+          <div class="marquee-track">
+              <span class="marquee-content">
+                  АСУ ТП — это боль, .NET — это память, Rust — это жизнь, а CSS — это магия. &nbsp;&nbsp;&nbsp;
+              </span>
+          </div>
       </div>
-        <!-- Windows Button Свернуть, уменьшить, закрыть -->
-        <div class="controls">
-          <button id="titlebar-minimize" title="minimize">
-            <!-- https://api.iconify.design/mdi:window-minimize.svg -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="currentColor" d="M19 13H5v-2h14z" />
-            </svg>
-          </button>
-          <button id="titlebar-maximize" title="maximize">
-            <!-- https://api.iconify.design/mdi:window-maximize.svg -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="currentColor" d="M4 4h16v16H4zm2 4v10h12V8z" />
-            </svg>
-          </button>
-          <button id="titlebar-close" title="close">
-            <!-- https://api.iconify.design/mdi:close.svg -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M13.46 12L19 17.54V19h-1.46L12 13.46L6.46 19H5v-1.46L10.54 12L5 6.46V5h1.46L12 10.54L17.54 5H19v1.46z"
-              />
-            </svg>
-          </button>
-        </div>      
     </div>
     <main class="container">      
       <div id="chart-container"></div>

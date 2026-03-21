@@ -16,7 +16,7 @@
         "title": "monolith",
         "width": 800,
         "height": 600,
-        "decorations": false,
+        "decorations": true,
         "visible": false, 
         "resizable": true
       }
