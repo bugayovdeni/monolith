@@ -2,7 +2,7 @@ mod app;
 use app::handler::{close_handler::close_event, menu_handler::menu_event};
 use app::menu_app::setup_menu;
 mod command;
-mod models;
+mod domain;
 mod services;
 use command::cmd_greet::greet;
 //NOTE ИМПОРТ ТРЕЙТА MANAGER (Обязательно для работы get_webview_window)

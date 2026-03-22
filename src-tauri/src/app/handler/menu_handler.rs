@@ -1,6 +1,6 @@
 use crate::app::exit_app::close as close_app;
 use crate::app::handler::csv_path;
-use crate::services::csv_services::csv_manager::run as run_manager;
+use crate::domain::csv::services::csv_parser::CsvParser;
 use tauri::App;
 use tauri::AppHandle;
 
@@ -40,7 +40,7 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
 
                     // 2. Читаем и валидим (синхронная операция, но в отдельном потоке)
                     // Блокировка тут не страшна, так как мы не в главном UI-потоке
-                    match run_manager(&path) {
+                    match CsvParser::parse(&path) {
                         Ok(data) => {
                             //TODO
                             // 3. Успех — шлём данные во фронтенд
