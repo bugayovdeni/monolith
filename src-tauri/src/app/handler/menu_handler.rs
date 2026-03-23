@@ -1,8 +1,10 @@
 use crate::app::exit_app::close as close_app;
 use crate::app::handler::csv_path;
 use crate::domain::csv::services::csv_parser::CsvParser;
+use crate::services::csv_manager::CsvManager;
 use tauri::App;
 use tauri::AppHandle;
+use tauri::Manager;
 
 ///
 /// ## Обработчик закрытия приложения
@@ -40,16 +42,21 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
 
                     // 2. Читаем и валидим (синхронная операция, но в отдельном потоке)
                     // Блокировка тут не страшна, так как мы не в главном UI-потоке
-                    match CsvParser::parse(&path) {
+                    let manager = app_handle.state::<CsvManager>();
+                    match manager.load_file(&path) {
                         Ok(data) => {
                             //TODO
                             // 3. Успех — шлём данные во фронтенд
                             // ui_event::send_success(&app_handle, data);
+                            //FIXME
+                            println!("CSV данные получены");
                         }
                         Err(e) => {
                             //TODO
                             // 4. Ошибка валидации/чтения — шлём ошибку
                             // ui_event::send_error(&app_handle, format!("CSV Error: {}", e));
+                            //FIXME
+                            println!("CSV ошибка");
                         }
                     }
                 });

@@ -1,6 +1,7 @@
 mod app;
 use app::handler::{close_handler::close_event, menu_handler::menu_event};
 use app::menu_app::setup_menu;
+use services::csv_manager::CsvManager;
 mod command;
 mod domain;
 mod services;
@@ -32,6 +33,10 @@ pub fn run() {
             //TODO Обработчик меню
             let _app_handle = app.handle().clone();
             menu_event(app, &_app_handle);
+
+            //TODO Менеджер обработки сохраненных CSV файлов
+            let csv_handle = CsvManager::new();
+            app.manage(csv_handle);
 
             Ok(())
         })
