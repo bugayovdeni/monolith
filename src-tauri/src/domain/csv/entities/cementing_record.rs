@@ -6,53 +6,54 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
 pub struct CementingRecord {
     // === f32 (4 байта) - 8 полей ===
-    /// Recirc Density - ppg
+    #[serde(rename = "Recirc Density")]
     pub recirc_density: f32,
 
-    /// Downhole Density - ppg
+    #[serde(rename = "Downhole Density")]
     pub downhole_density: f32,
 
-    /// Mix Water Rate - gpm
+    #[serde(rename = "Mix Water Rate")]
     pub mix_water_rate: f32,
 
-    /// Combo Rate - bpm
+    #[serde(rename = "Combo Rate")]
     pub combo_rate: f32,
 
-    /// PS Pressure - psi
+    #[serde(rename = "PS Pressure")]
     pub ps_pressure: f32,
 
-    /// DS Pressure - psi
+    #[serde(rename = "DS Pressure")]
     pub ds_pressure: f32,
 
-    /// Mix Wtr Stg Ttl - gal
+    #[serde(rename = "Mix Wtr Stg Ttl")]
     pub mix_wtr_stg_ttl: f32,
 
-    /// Mix Wtr Job Ttl - gal
+    #[serde(rename = "Mix Wtr Job Ttl")]
     pub mix_wtr_job_ttl: f32,
 
-    /// Combo Pump Stg Ttl - bbl
+    #[serde(rename = "Combo Pump Stg Ttl")]
     pub combo_pump_stg_ttl: f32,
 
-    /// Combo Pump Job Ttl - bbl
+    #[serde(rename = "Combo Pump Job Ttl")]
     pub combo_pump_job_ttl: f32,
 
-    /// PS Rate - bpm
+    #[serde(rename = "PS Rate")]
     pub ps_rate: f32,
 
-    /// DS Rate - bpm
+    #[serde(rename = "DS Rate")]
     pub ds_rate: f32,
 
     // === u8 (1 байт) - 4 поля (0-100) ===
     /// Cement Vlv Percent - cmt%
+    #[serde(rename = "Cement Vlv Percent")]
     pub cement_vlv_percent: u8,
 
-    /// Wtr Vlv Percent - wtr%
+    #[serde(rename = "Wtr Vlv Percent")]
     pub wtr_vlv_percent: u8,
 
-    /// Digital Outs
+    #[serde(rename = "Digital Outs")]
     pub digital_outs: u8,
 
-    /// Event Num
+    #[serde(rename = "Event Num")]
     pub event_num: u8,
 }
 

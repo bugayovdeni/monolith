@@ -50,14 +50,75 @@ impl CsvParser {
         let units = Self::parse_units(&mut reader)?;
 
         // 7. Читаем данные (строки 3..N)
+        // ✅ ВСТАВИТЬ ЭТО (новый код с парсингом по индексам):
+        // Вспомогательные функции для парсинга
+        let parse_f32 =
+            |row: usize, rec: &csv::StringRecord, idx: usize, name: &str| -> Result<f32> {
+                rec.get(idx)
+                    .ok_or_else(|| CsvError::ParseError {
+                        row,
+                        field: name.into(),
+                        reason: "missing column".into(),
+                    })?
+                    .trim()
+                    .parse::<f32>()
+                    .map_err(|e| CsvError::ParseError {
+                        row,
+                        field: name.into(),
+                        reason: e.to_string(),
+                    })
+            };
+
+        // ✅ УЛУЧШЕННАЯ функция для u8: умеет парсить и "45", и "45.00"
+        let parse_u8 =
+            |row: usize, rec: &csv::StringRecord, idx: usize, name: &str| -> Result<u8> {
+                let val = rec.get(idx).map(|s| s.trim()).unwrap_or("0");
+                if val.is_empty() {
+                    Ok(0)
+                } else {
+                    // Сначала пробуем как u8, если не вышло (есть точка) — парсим как f32 и кастуем
+                    val.parse::<u8>()
+                        .or_else(|_| val.parse::<f32>().map(|f| f as u8))
+                        .map_err(|e| CsvError::ParseError {
+                            row,
+                            field: name.into(),
+                            reason: e.to_string(),
+                        })
+                }
+            };
+
+        // Парсим данные по индексам (игнорируем заголовки)
         let records: Vec<CementingRecord> = reader
-            .deserialize()
+            .records()
             .enumerate()
             .map(|(i, result)| {
-                result.map_err(|e| CsvError::ParseError {
-                    row: i + 3, // +3 потому что 1-заголовки, 2-единицы, 3-первая данные
-                    field: "unknown".to_string(),
-                    reason: e.to_string(),
+                let rec = result.map_err(|e| CsvError::CsvError(e))?;
+                let row_num = i + 3; // 1=headers, 2=units, 3+=data
+
+                Ok(CementingRecord {
+                    // === f32 поля (индексы 0-9) ===
+                    recirc_density: parse_f32(row_num, &rec, 0, "recirc_density")?,
+                    downhole_density: parse_f32(row_num, &rec, 1, "downhole_density")?,
+                    mix_water_rate: parse_f32(row_num, &rec, 2, "mix_water_rate")?,
+                    combo_rate: parse_f32(row_num, &rec, 3, "combo_rate")?,
+                    ps_pressure: parse_f32(row_num, &rec, 4, "ps_pressure")?,
+                    ds_pressure: parse_f32(row_num, &rec, 5, "ds_pressure")?,
+                    mix_wtr_stg_ttl: parse_f32(row_num, &rec, 6, "mix_wtr_stg_ttl")?,
+                    mix_wtr_job_ttl: parse_f32(row_num, &rec, 7, "mix_wtr_job_ttl")?,
+                    combo_pump_stg_ttl: parse_f32(row_num, &rec, 8, "combo_pump_stg_ttl")?,
+                    combo_pump_job_ttl: parse_f32(row_num, &rec, 9, "combo_pump_job_ttl")?,
+
+                    // === u8 поля: проценты (индексы 10-11 в файле) ===
+                    cement_vlv_percent: parse_u8(row_num, &rec, 10, "cement_vlv_percent")?,
+                    wtr_vlv_percent: parse_u8(row_num, &rec, 11, "wtr_vlv_percent")?,
+
+                    // === f32 поля: рейты (индексы 12-13 в файле) ===
+                    ps_rate: parse_f32(row_num, &rec, 12, "ps_rate")?,
+                    ds_rate: parse_f32(row_num, &rec, 13, "ds_rate")?,
+
+                    // === u8 поля: флаги (индексы 14-15 в файле, но там могут быть "0.00") ===
+                    digital_outs: parse_u8(row_num, &rec, 14, "digital_outs")?,
+                    event_num: parse_u8(row_num, &rec, 15, "event_num")?,
                 })
             })
             .collect::<Result<Vec<_>>>()?;
@@ -87,7 +148,7 @@ impl CsvParser {
         let name = filename.trim_end_matches(".csv");
 
         // Ожидаем формат: DataYYYYMMDD_HHMM
-        if !name.starts_with("Data") || name.len() != 16 {
+        if !name.starts_with("Data") || name.len() != 17 {
             return Err(CsvError::InvalidFilename(filename.to_string()));
         }
 
@@ -105,9 +166,8 @@ impl CsvParser {
 
     /// Парсинг второй строки CSV в CementingUnits
     fn parse_units(reader: &mut csv::Reader<BufReader<File>>) -> Result<CementingUnits> {
-        let mut units_iter = reader.records();
-
-        let units_row = units_iter
+        let units_row = reader
+            .records()
             .next()
             .ok_or(CsvError::EmptyFile)?
             .map_err(|e| CsvError::CsvError(e))?;
@@ -131,10 +191,10 @@ impl CsvParser {
             mix_wtr_job_ttl: get_unit(7),
             combo_pump_stg_ttl: get_unit(8),
             combo_pump_job_ttl: get_unit(9),
-            ps_rate: get_unit(10),
-            ds_rate: get_unit(11),
-            cement_vlv_percent: get_unit(12),
-            wtr_vlv_percent: get_unit(13),
+            cement_vlv_percent: get_unit(10),
+            wtr_vlv_percent: get_unit(11),
+            ps_rate: get_unit(12),
+            ds_rate: get_unit(13),
             digital_outs: get_unit(14),
             event_num: get_unit(15),
         })
