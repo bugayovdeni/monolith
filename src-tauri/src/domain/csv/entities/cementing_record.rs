@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 /// Поля отсортированы по размеру для минимального padding
 
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
 pub struct CementingRecord {
     // === f32 (4 байта) - 8 полей ===
     #[serde(rename = "Recirc Density")]

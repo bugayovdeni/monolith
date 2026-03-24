@@ -1,9 +1,9 @@
 use crate::app::exit_app::close as close_app;
 use crate::app::handler::csv_path;
-use crate::domain::csv::services::csv_parser::CsvParser;
 use crate::services::csv_manager::CsvManager;
 use tauri::App;
 use tauri::AppHandle;
+use tauri::Emitter;
 use tauri::Manager;
 
 ///
@@ -44,17 +44,35 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
                     // Блокировка тут не страшна, так как мы не в главном UI-потоке
                     let manager = app_handle.state::<CsvManager>();
                     match manager.load_file(&path) {
-                        Ok(data) => {
+                        Ok(session_id) => {
                             //TODO
-                            // 3. Успех — шлём данные во фронтенд
-                            // ui_event::send_success(&app_handle, data);
+                            // 🔥 Формируем лёгкий пейлоад для события
+                            let payload = serde_json::json!({
+                                "session_id": session_id.to_string(),
+                                "filename": path.file_name()
+                                    .and_then(|s| s.to_str())
+                                    .unwrap_or("unknown.csv"),
+                                "status": "loaded"
+                            });
+                            // 🔥 Эмитим событие во все окна
+                            // Имя события должно байт-в-байт совпадать с тем, на что подписан фронтенд
+                            if let Err(e) = app_handle.emit("csv://loaded", payload) {
+                                eprintln!("❌ Не удалось отправить событие: {}", e);
+                            }
                             //FIXME
                             println!("CSV данные получены");
                         }
                         Err(e) => {
                             //TODO
-                            // 4. Ошибка валидации/чтения — шлём ошибку
-                            // ui_event::send_error(&app_handle, format!("CSV Error: {}", e));
+                            // 🔥 На случай ошибки — тоже сообщаем фронту
+                            let _ = app_handle.emit(
+                                "csv://error",
+                                serde_json::json!({
+                                    "message": format!("Ошибка загрузки: {}", e),
+                                    "status": "failed"
+                                }),
+                            );
+                            eprintln!("❌ CSV ошибка: {}", e);
                             //FIXME
                             println!("CSV ошибка");
                         }
