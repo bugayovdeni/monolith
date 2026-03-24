@@ -23,28 +23,108 @@
           <!-- Дорожка, которая будет ездить -->
           <div class="marquee-track">
               <span class="marquee-content">
-                  АСУ ТП — это боль, .NET — это память, Rust — это жизнь, а CSS — это магия. &nbsp;&nbsp;&nbsp;
+                  ПЛК не Пподключен...     Файл не загружен... &nbsp;&nbsp;&nbsp;
               </span>
           </div>
       </div>
     </div>
     <main class="container">      
+    <!-- ✅ Левый сайдбар — первый, как и положено слева -->
+      <aside id="sidebar-left" class="sidebar sidebar-left">
+        <button class="toggle-btn-left" title="Показать панель">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+        <div class="sidebar-content">
+
+          <div class="panel-header">
+            <h3>Слои графиков</h3>
+            <button id="toggle-all" class="btn-smart">Все/Ничего</button>
+          </div>
+
+          <div class="layers-list">
+              <!-- Группа Плотность -->
+            <details open>
+              <summary>Плотность (2)</summary>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" data-series="recirc_density">Рецирк</label>
+                <label><input type="checkbox" data-series="downhole_density">Забой</label>
+              </div>
+            </details>       
+
+              <!-- Группа Давление -->
+            <details open>
+              <summary>Давление (2)</summary>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" data-series="ds_pressure">ВС</label>
+                <label><input type="checkbox" data-series="ps_pressure">ПС</label>
+              </div>
+            </details>
+
+              <!-- Группа Скорость -->
+            <details>
+              <summary>Скорость (4)</summary>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" data-series="ds_rate">ВС</label>
+                <label><input type="checkbox" data-series="ps_rate">ПС</label>
+                <label><input type="checkbox" data-series="combo_rate">Общая</label>
+                <label><input type="checkbox" data-series="mix_water_rate">Рецирк</label>
+              </div>
+            </details>
+
+              <!-- Группа Объемы Стадия-->
+            <details>
+              <summary>Объемы Стадия (2)</summary>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" data-series="combo_pump_stg_ttl">Насосами</label>
+                <label><input type="checkbox" data-series="mix_wtr_stg_ttl">Рецирк</label>
+              </div>
+            </details>
+
+              <!-- Группа Объемы Работа-->
+            <details>
+              <summary>Объемы Работа (2)</summary>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" data-series="combo_pump_job_ttl">Насосами</label>
+                <label><input type="checkbox" data-series="mix_wtr_job_ttl">Рецирк</label>
+              </div>
+            </details>
+
+              <!-- Группа Дозаторы-->
+            <details>
+              <summary>Дозаторы (2)</summary>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" data-series="cement_vlv_percent">Цемент</label>
+                <label><input type="checkbox" data-series="wtr_vlv_percent">Вода</label>
+              </div>
+            </details>
+
+            <!--Кнопка применить-->
+            <div class="sidebar-footer">
+              <button class="btn-action">Применить</button>
+            </div>
+
+          </div>
+        </div>
+
+      </aside>
+
+        <!-- График по центру -->
       <div id="chart-container"></div>
-      <div id="sidebar">
-        <!-- Кнопка теперь внутри, но позиционируется абсолютно -->
-        <button class="toggle-btn">
-          <!-- Иконка стрелки, чтобы было понятно -->
+
+       <!-- Правый сайдбар — последний -->
+      <aside id="sidebar-right" class="sidebar sidebar-right">
+        <button class="toggle-btn" title="Показать панель">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
         </button>
-
-        <!-- Контент, который будет обрезаться -->
         <div class="sidebar-content">
           <p>Тут какая-то херня сбоку</p>
           <p>Которая исчезает</p>
         </div>
-      </div>
-    </main>
+      </aside>
+     </main>
   </body>
 </html>

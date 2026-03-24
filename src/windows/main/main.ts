@@ -31,42 +31,10 @@ const csvManager = new CsvManager({
   onBulkUpdate: (bulk) => chart.loadBulkData(bulk) 
 });
 
-// Функция-помощник для навешивания событий
-// function bindWindowAction(id: string, action: () => Promise<void>) {
-//   const element = document.getElementById(id);
-//   if (element) {
-//     element.addEventListener('click', () => {
-//       action().catch((err) => console.error(`Ошибка ${id}:`, err));
-//     });
-//   } else {
-//     console.warn(`Элемент ${id} не найден`);
-//   }
-// }
-
-// let greetInputEl: HTMLInputElement | null;
-// let greetMsgEl: HTMLElement | null;
-
-//FIXME
-// async function greet() {
-//   if (greetMsgEl && greetInputEl) {
-//     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-//     greetMsgEl.textContent = await invoke("greet", {
-//       name: greetInputEl.value,
-//     });
-//   }
-// }
-
-//FIXME
 window.addEventListener("DOMContentLoaded", async () => {
-  // greetInputEl = document.querySelector("#greet-input");
-  // greetMsgEl = document.querySelector("#greet-msg");
-  // document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
-  //   e.preventDefault();
-  //   greet();
-  // });
     try {
     await csvManager.init();
-  } catch (err) {
+    } catch (err) {
     console.error('❌ Не удалось инициализировать CsvManager:', err);
   }
 
@@ -76,24 +44,56 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-//FIXME ==== ГРАФИКИ ==
-// setInterval(() => {
-//   const now = Date.now();
-
-//   chart.updateData(
-//     [now, Math.random() * 100],
-//     [now, Math.random() * 50]
-//   );
-// }, 1000);
-
-// ==== Side Bar ===
+// ==== САЙДБАРЫ ====
 window.addEventListener('DOMContentLoaded', () => {
-  const sidebar = document.getElementById('sidebar')!;
-  const btn = document.querySelector('.toggle-btn') as HTMLButtonElement;
+  // Левый сайдбар
+  const sidebarLeft = document.getElementById('sidebar-left');
+  const btnLeft = document.querySelector('.toggle-btn-left') as HTMLButtonElement;
+  
+  if (sidebarLeft && btnLeft) {
+    btnLeft.addEventListener('click', (e) => {
+      e.stopPropagation(); // Чтобы клик не ушёл выше
+      sidebarLeft.classList.toggle('hidden');
+    });
+  }
 
-  btn.addEventListener('click', () => {
-    console.log('Toggle, current classes:', sidebar.classList);
-    sidebar.classList.toggle('hidden');
+    // Правый сайдбар
+  const sidebarRight = document.getElementById('sidebar-right');
+  const btnRight = document.querySelector('#sidebar-right .toggle-btn') as HTMLButtonElement;
+  
+  if (sidebarRight && btnRight) {
+    btnRight.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebarRight.classList.toggle('hidden');
+    });
+  }
+});
+
+document.getElementById('toggle-all')?.addEventListener('click', () => {
+  const checkboxes = document.querySelectorAll('.checkbox-grid input[type="checkbox"]');
+  // Проверяем первый, чтобы понять, что делать
+  const firstChecked = (checkboxes[0] as HTMLInputElement)?.checked;
+  
+  checkboxes.forEach((cb) => {
+    (cb as HTMLInputElement).checked = !firstChecked;
+    // Тут должен быть триггер перерисовки графика, если у тебя там реактивщина
+    // cb.dispatchEvent(new Event('change')); 
   });
 });
 
+//TODO Выбор графиков
+const applyBtn = document.querySelector('.btn-action') as HTMLButtonElement;
+const sidebarLeft = document.querySelector('.sidebar-left') as HTMLElement;
+
+applyBtn?.addEventListener('click', () => {
+  // Собираем только отмеченные чекбоксы, у которых есть data-series
+  const checkedInputs = sidebarLeft.querySelectorAll('input[type="checkbox"]:checked');
+  const visibleSeriesIds = Array.from(checkedInputs)
+    .map(input => (input as HTMLInputElement).dataset.series)
+    .filter((id): id is string => !!id); // Отсеиваем undefined
+
+  // Пинаем график
+  chart.toggleSeriesVisibility(visibleSeriesIds);
+  
+  console.log(`🎨 График обновлён. Видимые серии: ${visibleSeriesIds.join(', ') || 'пусто'}`);
+});

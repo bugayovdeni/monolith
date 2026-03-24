@@ -98,6 +98,7 @@ body {
   display: flex;
   gap: 10px;
   height: calc(100dvh - 40px);
+  margin-top: 40px;
   overflow: hidden;
   position: relative;
   /* Убедись, что у контейнера нет min-width, который мешает */
@@ -114,76 +115,249 @@ body {
 }
 
 /* === САЙДБАР === */
-#sidebar {
-  /* Размеры */
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* === БАЗОВЫЙ КЛАСС ДЛЯ ВСЕХ САЙДБАРОВ === */
+.sidebar {
   flex: 0 0 200px;
   min-width: 0;
-  
-  /* 🔥 Критично: разрешаем кнопке вылезать за границы */
-  overflow: visible; 
-  position: relative; /* Чтобы кнопка позиционировалась относительно сайдбара */
-  
-  /* Анимация */
+  overflow: visible;
+  position: relative;
   transition: flex 0.3s ease, opacity 0.3s ease;
-  
-  /* Фон */
-  background: #2d2d2d; /* Темный фон под VS */
+  background: #2d2d2d;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === ПРАВЫЙ САЙДБАР === */
+.sidebar-right {
   border-left: 1px solid #333;
 }
 
-/* Скрытое состояние */
-#sidebar.hidden {
-  flex: 0 0 0;          /* 🔥 База = 0, место освобождается */
-  opacity: 0;
-  padding: 0;
-  margin: 0;
-  border-width: 0;
-}
-/* === КОНТЕНТ ВНУТРИ (чтобы не тек) === */
-.sidebar-content {
-  overflow: hidden; /* 🔥 Режем текст */
-  white-space: nowrap;
-  padding: 10px;
-  opacity: 1;
-  transition: opacity 0.3s ease;
+/* === ЛЕВЫЙ САЙДБАР === */
+.sidebar-left {
+  border-right: 1px solid #333;
 }
 
-/* === КНОПКА-ВКЛАДКА === */
+/* === СКРЫТИЕ ЛЮБОГО САЙДБАРА === */
+.sidebar.hidden {
+  flex: 0 0 0 !important;
+  opacity: 1; /* Кнопка должна остаться видимой */
+}
+
+.sidebar.hidden .sidebar-content {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* === КНОПКА ПРАВОГО САЙДБАРА === */
 .toggle-btn {
   position: absolute;
-  left: 0; /* Прижата к левому краю сайдбара */
+  left: 0;
   top: 50%;
-  transform: translateY(-50%) translateX(-100%); /* Выносим влево за пределы */
+  transform: translateY(-50%) translateX(-100%);
   
-  /* Стили кнопки */
   width: 30px;
   height: 60px;
   background: #333;
   border: 1px solid #555;
-  border-right: none; /* Прилипает к сайдбару */
+  border-right: none;
   border-radius: 4px 0 0 4px;
   cursor: pointer;
-  z-index: 100; /* 🔥 Чтобы была поверх графика */
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   outline: none;
-  
-  /* Чтобы не мерцала при анимации */
   transition: background 0.2s;
 }
 .toggle-btn:hover {
   background: #444;
 }
 
-/* === СКРЫТОЕ СОСТОЯНИЕ === */
-#sidebar.hidden {
-  flex: 0 0 0; /* Схлопываем ширину */
-  opacity: 1; /* 🔥 Не скрываем opacity, иначе кнопка исчезнет! */
+/* === КНОПКА ЛЕВОГО САЙДБАРА === */
+.toggle-btn-left {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  
+  width: 30px;
+  height: 60px;
+  background: #333;
+  border: 1px solid #555;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition: background 0.2s;
+}
+.toggle-btn-left:hover {
+  background: #444;
 }
 
-/* Скрываем только контент, кнопка остается */
-#sidebar.hidden .sidebar-content {
-  opacity: 0;
+/* === АНИМАЦИЯ СТРЕЛОК === */
+
+/* Базовый переход для плавности */
+.toggle-btn svg,
+.toggle-btn-left svg {
+  transition: transform 0.3s ease;
+  will-change: transform; /* Оптимизация для браузера */
+}
+
+/* === ПРАВЫЙ САЙДБАР === */
+/* По умолчанию стрелка смотрит ВЛЕВО (закрыто) */
+/* Когда открыт — поворачиваем на 180°, смотрит ВПРАВО */
+.sidebar-right:not(.hidden) .toggle-btn svg {
+  transform: rotate(180deg);
+}
+
+/* === ЛЕВЫЙ САЙДБАР === */
+/* По умолчанию стрелка смотрит ВПРАВО (закрыто) */
+/* Когда открыт — поворачиваем на 180°, смотрит ВЛЕВО */
+.sidebar-left:not(.hidden) .toggle-btn-left svg {
+  transform: rotate(180deg);
+}
+
+/* Чтобы заголовок и кнопка были в ряд */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
+
+/* Стили для аккордеона, чтобы не выглядело как сайт из 2005 */
+details {
+  margin-bottom: 5px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #1e1e1e;
+}
+
+summary {
+  padding: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  list-style: none; /* Убираем стандартный треугольник, если хочешь */
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Сетка для чекбоксов внутри группы */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Две колонки, экономим место */
+  gap: 5px;
+  padding: 5px 10px 10px 10px;
+  font-size: 0.85em;
+}
+
+.checkbox-grid label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Кнопка */
+.btn-smart {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 2px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.btn-smart:hover {
+  background: #666;
+}
+
+#toggle-all {
+  background: #d32f2f;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/* #toggle-all {
+  position: relative !important; 
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+} */
+/* #toggle-all {
+  background: #d32f2f !important;
+  color: #fff !important;
+  border: 1px solid #fff !important;
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  opacity: 1 !important; 
+  visibility: visible !important;
+  border-radius: 4px;
+  font-weight: bold;
+} */
+
+#toggle-all:hover {
+  background: #b71c1c !important;
+}
+
+/* Проверка контейнера */
+.panel-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Контент скроллится */
+.layers-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Футер прижат вниз */
+.sidebar-footer {
+  padding-top: 10px;
+  border-top: 1px solid #444;
+}
+
+/* Кнопка */
+.btn-action {
+  width: 100%;
+  padding: 8px;
+  background: #2e7d32;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.btn-action:hover {
+  background: #1b5e20;
 }

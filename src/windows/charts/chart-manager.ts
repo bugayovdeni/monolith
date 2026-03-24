@@ -104,37 +104,105 @@ export class ChartManager {
  * Загрузить данные оптом. 
  * bulkData: { seriesId: [ [ts, val], [ts, val], ... ] }
  */
-public loadBulkData(bulkData: Record<string, DataPoint[]>) {
-  let hasUpdates = false;
-  
-  for (const [seriesId, points] of Object.entries(bulkData)) {
-    const data = this.seriesData.get(seriesId);
-    if (!data) continue;
+  public loadBulkData(bulkData: Record<string, DataPoint[]>) {
+    let hasUpdates = false;
     
-    // Чистим старое и заливаем новое
-    data.length = 0;
-    data.push(...points);
-    
-    // Обрезаем, если вдруг больше лимита (на всякий)
-    if (data.length > this.MAX_POINTS) {
-      data.splice(0, data.length - this.MAX_POINTS);
+    for (const [seriesId, points] of Object.entries(bulkData)) {
+      const data = this.seriesData.get(seriesId);
+      if (!data) continue;
+      
+      // Чистим старое и заливаем новое
+      data.length = 0;
+      data.push(...points);
+      
+      // Обрезаем, если вдруг больше лимита (на всякий)
+      if (data.length > this.MAX_POINTS) {
+        data.splice(0, data.length - this.MAX_POINTS);
+      }
+      hasUpdates = true;
     }
-    hasUpdates = true;
+
+    if (hasUpdates && this.chart) {
+      this.chart.setOption({
+        series: this.seriesConfig.map(cfg => ({
+          name: cfg.name,
+          data: this.seriesData.get(cfg.id)
+        }))
+      });
+      // 👇 Зумим в конец, чтобы видеть последние данные
+      this.chart.dispatchAction({
+        type: 'dataZoom',
+        start: 95,
+        end: 100
+      });
+    }
   }
 
-  if (hasUpdates && this.chart) {
-    this.chart.setOption({
-      series: this.seriesConfig.map(cfg => ({
+/**
+ * Обновляет видимость серий на графике
+ * @param visibleIds - массив ID серий, которые нужно показать
+ */
+/**
+ * Обновляет видимость серий на графике
+ * @param visibleIds - массив ID серий, которые нужно показать
+ */
+  public toggleSeriesVisibility(visibleIds: string[]) {
+    if (!this.chart) return;
+
+    // Обновляем внутренний стейт конфига
+    this.seriesConfig.forEach(cfg => {
+      cfg.visible = visibleIds.includes(cfg.id);
+    });
+
+  // Формируем новые опции для серий
+    const newSeriesOptions = this.seriesConfig.map(cfg => {
+      const isVisible = visibleIds.includes(cfg.id);
+      
+      return {
         name: cfg.name,
-        data: this.seriesData.get(cfg.id)
-      }))
+        type: 'line', // Обязательно указываем тип, иначе ECharts может тупить
+        show: isVisible, // ✅ Правильное свойство для показа/скрытия
+        data: isVisible ? (this.seriesData.get(cfg.id) || []) : [], // ✅ Пустые данные для скрытых
+        smooth: false,
+        showSymbol: false,
+        lineStyle: { width: 2, color: cfg.color },
+        sampling: 'lttb',
+        // Не забываем про зум, если он нужен
+        markLine: cfg.visible ? undefined : { silent: true } 
+      };
     });
-    // 👇 Зумим в конец, чтобы видеть последние данные
-    this.chart.dispatchAction({
-      type: 'dataZoom',
-      start: 95,
-      end: 100
-    });
+
+    // Применяем опции. 
+    // Важно: не используем notMerge: true для всего графика, 
+    // иначе сбросим оси, тултипы и прочую херню.
+    // Мерджим только серии.
+    this.chart.setOption({
+      series: newSeriesOptions,
+      legend: { 
+        data: this.seriesConfig.filter(cfg => cfg.visible).map(cfg => cfg.name) 
+      }
+    }, { notMerge: false }); // false — чтобы не пересоздавать весь график
   }
-}
+  // public toggleSeriesVisibility(visibleIds: string[]) {
+  //   if (!this.chart) return;
+
+  //   // Обновляем внутренний стейт конфига
+  //   this.seriesConfig.forEach(cfg => {
+  //     cfg.visible = visibleIds.includes(cfg.id);
+  //   });
+
+  //   // Применяем к графику: echarts скроет невидимые серии
+  //   this.chart.setOption({
+  //     series: this.seriesConfig.map(cfg => ({
+  //       name: cfg.name,
+  //       visible: cfg.visible, // echarts поймёт этот намёк
+  //       // Если нужно полностью убирать данные из рендера, а не просто скрыть:
+  //       // data: cfg.visible ? this.seriesData.get(cfg.id) : [] 
+  //     })),
+  //     // Легенду тоже не помешает обновить, если она есть
+  //     legend: { 
+  //       data: this.seriesConfig.filter(cfg => cfg.visible).map(cfg => cfg.name) 
+  //     }
+  //   });
+  // }
 }
