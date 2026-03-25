@@ -13,8 +13,8 @@
       <!-- Логотип и Название -->
       <div class="app-identity">
         <!-- Эмблема -->
-        <img src="" alt="Monolith Logo" class="app-logo" /> 
-        <span class="app-name">MONOLITH<span style="font-size: 0.7em; opacity: 0.7;">v1.0</span></span>
+        <!-- <img src="" alt="Monolith Logo" class="app-logo" />  -->
+        <span class="app-name"> БУРСЕРВИС <span style="font-size: 0.7em; opacity: 0.7;"> v1.0 </span></span>
       </div>        
       
       <!-- Дорожка -->
@@ -23,7 +23,7 @@
           <!-- Дорожка, которая будет ездить -->
           <div class="marquee-track">
               <span class="marquee-content">
-                  ПЛК не Пподключен...     Файл не загружен... &nbsp;&nbsp;&nbsp;
+                  ПЛК не Подключен...     Файл не загружен... &nbsp;&nbsp;&nbsp;
               </span>
           </div>
       </div>
@@ -104,10 +104,8 @@
             <div class="sidebar-footer">
               <button class="btn-action">Применить</button>
             </div>
-
           </div>
         </div>
-
       </aside>
 
         <!-- График по центру -->
@@ -120,10 +118,43 @@
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
         </button>
-        <div class="sidebar-content">
-          <p>Тут какая-то херня сбоку</p>
-          <p>Которая исчезает</p>
+
+        <div class="sidebar-content">          
+           <h3 class="label-up">Управление системой</H3>
+
+          <div class="right-layers-list">
+            <button class="cool-button">Загрузить план работ</button>
+            <details class="collapse-block">
+            <summary class="collapse-title">Работа</summary>
+              <div class="collapse-content">
+                <p>План работ не загружен...</p>
+                <code>0xdeadbeef</code>
+              </div>
+            </details>
+
+                      <!-- Рецепты -->
+            <details>
+              <summary>Рецепты (6)</summary>
+              <div class="checkbox-recept">
+                <label><input type="checkbox" > Рецепт 1 </label>
+                <label><input type="checkbox" > Рецепт 2 </label>
+                <label><input type="checkbox" > Рецепт 3 </label>
+                <label><input type="checkbox" > Рецепт 4 </label>
+                <label><input type="checkbox" > Рецепт 5 </label>
+                <label><input type="checkbox" > Рецепт 6 </label>
+              </div>
+            </details>
+
+            <!--Кнопка старт-->
+            <div class="sidebar-footer">
+              <button class="start-button"> Старт </button>
+              <button class="stop-button"> Стоп </button>
+            </div>
+
+          </div>
+
         </div>
+        
       </aside>
      </main>
   </body>

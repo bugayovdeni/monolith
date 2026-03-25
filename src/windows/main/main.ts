@@ -1,8 +1,9 @@
 // import { invoke } from "@tauri-apps/api/core";
 // import { listen } from "@tauri-apps/api/event";
 // import { getCurrentWindow } from '@tauri-apps/api/window';
-import { ChartManager, SeriesConfig, type DataPoint  } from '../charts/chart-manager';
-import logoSrc from '../../assets/monolith.svg';
+import { ChartManager, SeriesConfig} from '../charts/chart-manager';
+//FIXME Logo
+// import logoSrc from '../../assets/monolith.svg';
 import { CsvManager, DEFAULT_SERIES_MAPPING } from '../../services/csv/csv-manager';
 
 // when using `"withGlobalTauri": true`, you may use
@@ -37,11 +38,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
     console.error('❌ Не удалось инициализировать CsvManager:', err);
   }
-
-  const logo = document.querySelector('.app-logo') as HTMLImageElement
-  if (logo) {
-    logo.src = logoSrc
-  }
+  //FIXME LOGO
+  // const logo = document.querySelector('.app-logo') as HTMLImageElement
+  // if (logo) {
+  //   logo.src = logoSrc
+  // }
 });
 
 // ==== САЙДБАРЫ ====
