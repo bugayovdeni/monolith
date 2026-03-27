@@ -1,0 +1,107 @@
+
+/* === САЙДБАР === */
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* === БАЗОВЫЙ КЛАСС ДЛЯ ВСЕХ САЙДБАРОВ === */
+.sidebar {
+  flex: 0 0 200px;
+  min-width: 0;
+  overflow: visible;
+  position: relative;
+  transition: flex 0.3s ease, opacity 0.3s ease;
+  background: #2d2d2d;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === ПРАВЫЙ САЙДБАР === */
+.sidebar-right {
+  border-left: 1px solid #333;
+}
+
+/* === КНОПКА ПРАВОГО САЙДБАРА === */
+.toggle-btn {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(-100%);
+  
+  width: 30px;
+  height: 60px;
+  background: #333;
+  border: 1px solid #555;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition: background 0.2s;
+}
+.toggle-btn:hover {
+  background: #444;
+}
+/* === ПРАВЫЙ САЙДБАР === */
+/* По умолчанию стрелка смотрит ВЛЕВО (закрыто) */
+/* Когда открыт — поворачиваем на 180°, смотрит ВПРАВО */
+.sidebar-right:not(.hidden) .toggle-btn svg {
+  transform: rotate(180deg);
+}
+
+
+/* === ЛЕВЫЙ САЙДБАР === */
+.sidebar-left {
+  border-right: 1px solid #333;
+}
+/* === КНОПКА ЛЕВОГО САЙДБАРА === */
+.toggle-btn-left {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  
+  width: 30px;
+  height: 60px;
+  background: #333;
+  border: 1px solid #555;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition: background 0.2s;
+}
+.toggle-btn-left:hover {
+  background: #444;
+}
+/* === ЛЕВЫЙ САЙДБАР === */
+/* По умолчанию стрелка смотрит ВПРАВО (закрыто) */
+/* Когда открыт — поворачиваем на 180°, смотрит ВЛЕВО */
+.sidebar-left:not(.hidden) .toggle-btn-left svg {
+  transform: rotate(180deg);
+}
+
+
+/* === СКРЫТИЕ ЛЮБОГО САЙДБАРА === */
+.sidebar.hidden {
+  flex: 0 0 0 !important;
+  opacity: 1; /* Кнопка должна остаться видимой */
+}
+
+.sidebar.hidden .sidebar-content {
+  opacity: 0;
+  pointer-events: none;
+}
