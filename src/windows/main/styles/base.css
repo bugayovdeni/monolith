@@ -1,0 +1,31 @@
+
+/* === БАЗОВЫЕ НАСТРОЙКИ === */
+body {
+  margin: 0;
+  padding: 0;
+  background: #1e1e1e;
+  color: #fff;
+  font-family: monospace;
+  overflow: hidden;
+}
+
+/* === КОНТЕНТ === */
+.container {
+  display: flex;
+  gap: 10px;
+  height: calc(100dvh - 40px);
+  margin-top: 40px;
+  overflow: hidden;
+  position: relative;
+  /* Убедись, что у контейнера нет min-width, который мешает */
+  min-width: 0; 
+}
+
+/* === ГРАФИКИ === */
+#chart-container {
+  flex: 1;              /* Занимает всё свободное */
+  min-width: 0;         /* 🔥 ВАЖНО: Разрешаем сжиматься, когда сайдбар лезет обратно */
+  width: 100%;          /* Чтобы график понимал границы */
+  background: #f0f0f0;
+  overflow: hidden;     /* На всякий случай */
+}

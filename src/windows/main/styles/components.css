@@ -1,0 +1,343 @@
+
+/* === АНИМАЦИЯ СТРЕЛОК === */
+
+/* Базовый переход для плавности */
+.toggle-btn svg,
+.toggle-btn-left svg {
+  transition: transform 0.3s ease;
+  will-change: transform; /* Оптимизация для браузера */
+}
+
+/* Стили для аккордеона, чтобы не выглядело как сайт из 2005 */
+details {
+  margin-bottom: 5px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #1e1e1e;
+}
+
+summary {
+  padding: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  list-style: none; /* Убираем стандартный треугольник, если хочешь */
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Сетка для чекбоксов внутри группы */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Две колонки, экономим место */
+  gap: 5px;
+  padding: 5px 10px 10px 10px;
+  font-size: 0.85em;
+}
+
+.checkbox-grid label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Кнопка */
+.btn-smart {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 2px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.btn-smart:hover {
+  background: #666;
+}
+
+#toggle-all {
+  background: #d32f2f;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+
+#toggle-all:hover {
+  background: #b71c1c !important;
+}
+
+/* Проверка контейнера */
+.panel-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Контент скроллится */
+.layers-list {
+  flex: 1;
+  overflow-y: auto; 
+
+    /* padding: 10px;        
+  display: flex;
+  flex-direction: column;
+  gap: 10px;    */
+}
+
+/* Футер прижат вниз */
+.sidebar-footer {
+  position: sticky; /* Липнет при скролле */
+  bottom: 0;        /* Прилипает к низу контейнера */
+  background: #2d2d2d; /* Фон обязателен, иначе текст просвечивать будет */
+  padding: 10px;
+  border-top: 1px solid #444;
+  z-index: 10;      /* Чтобы была поверх контента */
+}
+
+/* Кнопка */
+  .btn-action {
+    background-color: #2e7d32; /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 5px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .btn-action:hover {
+    background-color: #1b5e20; /* Темнее при наведении */
+  }
+
+/* === Контент правый SlideBar === */
+.label-up{
+  text-align: center;
+  width: 100%; 
+  margin: 0; 
+  background: #CE0E2D;
+  padding: 10px 0;
+}
+
+ /* Стили для кнопки, чтобы выглядела дорого-богато */
+  .cool-button {
+    background-color: #007bff; /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .cool-button:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+  }
+
+  /*Работа*/
+  /* Стили для самого контейнера */
+.collapse-block {
+  margin: 0; /* Убираем стандартные отступы details */
+  width: 100%;
+}
+
+ /* Стили для заголовка (на который жмем) */
+.collapse-block summary {
+  list-style: none; /* Убираем маркер в Firefox */
+  display: block;   /* Гарантируем блочность */
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px;
+  background: #14de39;
+  border-radius: 4px;
+  margin: 20px auto 0;
+  width: 80%;
+  max-width: 300px;
+  
+  /* Скрываем маркер для современных браузеров */
+  &::marker {
+    content: "";
+    display: none;
+  }
+}
+
+  /* Убираем треугольник в Webkit (Chrome, Safari) */
+  .collapse-block summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Добавляем свой треугольник через псевдоэлемент, чтобы было красиво */
+  .collapse-block summary::after {
+    content: '▼'; /* Стрелка вниз */
+    float: right;
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+
+  /* Поворачиваем стрелку, когда открыто */
+  .collapse-block[open] summary::after {
+    transform: rotate(180deg);
+  }
+
+  /* Стили для контента внутри */
+  .collapse-content {
+    padding: 10px;
+    background: #f0f4ee;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    font-size: 12px;
+    color: #555;
+  }
+  
+  /* Чтобы текст внутри не прилипал */
+  .collapse-content p {
+    margin: 5px 0;
+  }
+
+  /* Контейнер для чекбоксов */
+.checkbox-recept {
+  padding: 15px;
+  background: #2b2b2b; /* Темный фон, как в прошлом блоке */
+  border: 1px solid #14de39; /* Зеленая рамка */
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  width: 80%;
+  max-width: 300px;
+  margin: 0 auto; /* Центрируем */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между рецептами */
+}
+
+/* Сами лейблы (строки с чекбоксами) */
+.checkbox-recept label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 13px;
+  padding: 5px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+/* Ховер эффект - подсветка строки */
+.checkbox-recept label:hover {
+  background: #333;
+  color: #14de39;
+}
+
+/* Чекбоксы */
+.checkbox-recept input[type="checkbox"] {
+  accent-color: #14de39; /* Красим галочку в зеленый (работает в современных браузерах) */
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* Саммарии (заголовок) надо стилизовать так же, как предыдущий */
+details summary {
+  list-style: none;
+  display: block;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px;
+  background: #a2de5d;
+  border-radius: 4px;
+  margin: 20px auto 0;
+  width: 80%;
+  max-width: 300px;
+  color: #000; /* Текст черный на зеленом фоне */
+}
+
+/* Убираем стандартный треугольник */
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* === Кнопка Старт === */
+ /* Стили для кнопки, чтобы выглядела дорого-богато */
+  .start-button {
+    background-color: #67f1e1; /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .start-button:hover {
+    background-color: #48b300; /* Темнее при наведении */
+  }
+
+  /* === Кнопка стоп === */
+    .stop-button {
+    background-color: rgb(242, 102, 102); /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .stop-button:hover {
+    background-color: rgb(235, 10, 10); /* Темнее при наведении */
+  }
+
+  /* Скролл-контейнер для ПРАВОГО сайдбара */
+.right-layers-list {
+  flex: 1;              /* Растягивается на всю доступную высоту */
+  overflow-y: auto;     /* Включает скролл, если контент не влезает */
+  padding: 10px;        /* Отступы, чтобы контент не лип к краям */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;            /* Расстояние между элементами */
+}
+
+/* Кастомизация скроллбара (для красоты, чтобы не как в винде 95) */
+.right-layers-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.right-layers-list::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.right-layers-list::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+.right-layers-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -1,0 +1,95 @@
+
+/* === TITLEBAR === */
+.titlebar {
+  height: 40px;
+  /* ИЗМЕНЕНИЕ: Делаем фон темным (#1e1e1e), чтобы кнопки минимизации были незаметны */
+  background: #1e1e1e; 
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-bottom: 1px solid #333; /* Optional: тонкая рамка снизу для разделения */
+}
+
+/*TODO === ЛОГОТИП === */
+.app-identity {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 20;
+  /* Важно: логотип НЕ должен блокировать события, если мы хотим тащить за него */
+  pointer-events: none; /* Пропускаем клики сквозь лого на родительский div[data-tauri-drag-region] */
+}
+
+/*FIXME Logo*/
+.app-logo {
+  width: 24px;
+  height: 24px;
+  /* filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); */
+}
+
+.app-name {
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #CE0E2D;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+/* === БЕГУЩАЯ СТРОКА === */
+.marquee-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #2d2d2d;
+  border-bottom: 2px solid #00ff00;
+  /* padding-left: 160px;  */
+  box-sizing: border-box;
+  /* ВАЖНО: Строка тоже не должна блокировать драг, если мы тащим за неё */
+  pointer-events: none; /* Пропускаем клики сквозь контейнер строки на родителя */
+}
+
+.marquee-track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll-left 15s linear infinite;
+  /* Текст внутри тоже пропускает клики */
+  pointer-events: none; 
+}
+
+.marquee-content {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+/* Чтобы заголовок и кнопка были в ряд */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
