@@ -1,0 +1,82 @@
+/* Сетка для чекбоксов левого сайдбара внутри группы */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Две колонки, экономим место */
+  gap: 5px;
+  padding: 5px 10px 10px 10px;
+  font-size: 0.85em;
+}
+
+.checkbox-grid label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+  /* Контейнер для чекбоксов правый сайтбар */
+.checkbox-recept {
+  padding: 15px;
+  background: #2b2b2b; /* Темный фон, как в прошлом блоке */
+  border: 1px solid #14de39; /* Зеленая рамка */
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  width: 80%;
+  max-width: 300px;
+  margin: 0 auto; /* Центрируем */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между рецептами */
+}
+
+/* Сами лейблы (строки с чекбоксами) */
+.checkbox-recept label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 13px;
+  padding: 5px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+/* Ховер эффект - подсветка строки */
+.checkbox-recept label:hover {
+  background: #333;
+  color: #14de39;
+}
+
+/* Чекбоксы Рецептов Правый Сайдбар*/
+.checkbox-recept input[type="checkbox"] {
+  accent-color: #14de39; /* Красим галочку в зеленый (работает в современных браузерах) */
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* Саммарии (заголовок) надо стилизовать так же, как предыдущий */
+details summary {
+  list-style: none;
+  display: block;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px;
+  background: #a2de5d;
+  border-radius: 4px;
+  margin: 20px auto 0;
+  width: 80%;
+  max-width: 300px;
+  color: #000; /* Текст черный на зеленом фоне */
+}
+
+/* Убираем стандартный треугольник */
+details summary::-webkit-details-marker {
+  display: none;
+}
