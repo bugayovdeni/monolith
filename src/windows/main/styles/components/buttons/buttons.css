@@ -1,0 +1,167 @@
+
+/* Кнопка "Слои графиков (все/ничего)"*/
+.btn-smart {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 2px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.btn-smart:hover {
+  background: #666;
+}
+
+#toggle-all {
+  background: #d32f2f;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+
+#toggle-all:hover {
+  background: #b71c1c !important;
+}
+
+/* Кнопка "Применить" Левый Сайдбар*/
+  .btn-action {
+    background-color: #2e7d32; /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 5px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .btn-action:hover {
+    background-color: #1b5e20; /* Темнее при наведении */
+  }
+
+ /* Стили для кнопки "Загрузить план работ" Правый Сайдбар*/
+  .cool-button {
+    background-color: #007bff; /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /*Кнопка "Работа" Правый Сайдбар*/
+  /* Стили для самого контейнера */
+.collapse-block {
+  margin: 0; /* Убираем стандартные отступы details */
+  width: 100%;
+}
+
+ /* Стили для заголовка (на который жмем) */
+.collapse-block summary {
+  list-style: none; /* Убираем маркер в Firefox */
+  display: block;   /* Гарантируем блочность */
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px;
+  background: #14de39;
+  border-radius: 4px;
+  margin: 20px auto 0;
+  width: 80%;
+  max-width: 300px;
+  
+  /* Скрываем маркер для современных браузеров */
+  &::marker {
+    content: "";
+    display: none;
+  }
+}
+
+  /* Убираем треугольник в Webkit (Chrome, Safari) */
+  .collapse-block summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Добавляем свой треугольник через псевдоэлемент, чтобы было красиво */
+  .collapse-block summary::after {
+    content: '▼'; /* Стрелка вниз */
+    float: right;
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+
+  /* Поворачиваем стрелку, когда открыто */
+  .collapse-block[open] summary::after {
+    transform: rotate(180deg);
+  }
+
+  /* Стили для контента внутри */
+  .collapse-content {
+    padding: 10px;
+    background: #f0f4ee;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    font-size: 12px;
+    color: #555;
+  }
+  
+  /* Чтобы текст внутри не прилипал */
+  .collapse-content p {
+    margin: 5px 0;
+  }
+
+  /* Эффект при наведении */
+  .cool-button:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+  }
+
+/* === Кнопка "Старт" Правый Сайдбар === */
+ /* Стили для кнопки, чтобы выглядела дорого-богато */
+  .start-button {
+    background-color: #67f1e1; /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .start-button:hover {
+    background-color: #48b300; /* Темнее при наведении */
+  }
+
+  /* === Кнопка стоп === */
+    .stop-button {
+    background-color: rgb(242, 102, 102); /* Синий цвет, как у всех нормальных людей */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Скругли углы, чтобы не резало глаза */
+    cursor: pointer; /* Чтобы курсор менялся на руку */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ от заголовка */
+    width: 80%; /* Кнопка на всю ширину, но с отступами */
+    max-width: 200px; /* Чтобы не растаялась слишком сильно */
+    margin: 20px auto 0;
+  }
+
+  /* Эффект при наведении */
+  .stop-button:hover {
+    background-color: rgb(235, 10, 10); /* Темнее при наведении */
+  }
