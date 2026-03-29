@@ -25,6 +25,15 @@
   border-left: 1px solid #333;
 }
 
+/* === Контент правый SlideBar (Top)=== */
+.label-up{
+  text-align: center;
+  width: 100%; 
+  margin: 0; 
+  background: #CE0E2D;
+  padding: 10px 0;
+}
+
 /* === КНОПКА ПРАВОГО САЙДБАРА === */
 .toggle-btn {
   position: absolute;

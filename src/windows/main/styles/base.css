@@ -29,3 +29,89 @@ body {
   background: #f0f0f0;
   overflow: hidden;     /* На всякий случай */
 }
+
+
+/* === АНИМАЦИЯ СТРЕЛОК === */
+
+/* Базовый переход для плавности */
+.toggle-btn svg,
+.toggle-btn-left svg {
+  transition: transform 0.3s ease;
+  will-change: transform; /* Оптимизация для браузера */
+}
+
+/* Стили для аккордеона, чтобы не выглядело как сайт из 2005 */
+details {
+  margin-bottom: 5px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #1e1e1e;
+}
+
+summary {
+  padding: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  list-style: none; /* Убираем стандартный треугольник, если хочешь */
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Проверка контейнера */
+.panel-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Контент скроллится */
+.layers-list {
+  flex: 1;
+  overflow-y: auto; 
+
+    /* padding: 10px;        
+  display: flex;
+  flex-direction: column;
+  gap: 10px;    */
+}
+
+/* Футер прижат вниз */
+.sidebar-footer {
+  position: sticky; /* Липнет при скролле */
+  bottom: 0;        /* Прилипает к низу контейнера */
+  background: #2d2d2d; /* Фон обязателен, иначе текст просвечивать будет */
+  padding: 10px;
+  border-top: 1px solid #444;
+  z-index: 10;      /* Чтобы была поверх контента */
+}
+
+  /* Скролл-контейнер для ПРАВОГО сайдбара */
+.right-layers-list {
+  flex: 1;              /* Растягивается на всю доступную высоту */
+  overflow-y: auto;     /* Включает скролл, если контент не влезает */
+  padding: 10px;        /* Отступы, чтобы контент не лип к краям */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;            /* Расстояние между элементами */
+}
+
+/* Кастомизация скроллбара (для красоты, чтобы не как в винде 95) */
+.right-layers-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.right-layers-list::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.right-layers-list::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+.right-layers-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
