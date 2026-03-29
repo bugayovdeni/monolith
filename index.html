@@ -12,17 +12,22 @@
     <!--NOTE src/windows/main/styles/titlebar.css-->
     <div class="titlebar">        
       <!-- Логотип и Название -->
+      <!--NOTE src/windows/main/styles/titlebar.css-->
       <div class="app-identity">
         <!-- Эмблема -->
         <!-- <img src="" alt="Monolith Logo" class="app-logo" />  -->
+        <!--NOTE src/windows/main/styles/titlebar.css-->
         <span class="app-name"> БУРСЕРВИС <span style="font-size: 0.7em; opacity: 0.7;"> v1.0 </span></span>
       </div>        
       
       <!-- Дорожка -->
           <!-- Контейнер, который режет всё лишнее -->
+      <!--NOTE src/windows/main/styles/titlebar.css-->
       <div class="marquee-container">
           <!-- Дорожка, которая будет ездить -->
+          <!--NOTE src/windows/main/styles/titlebar.css-->
           <div class="marquee-track">
+              <!--NOTE src/windows/main/styles/titlebar.css-->
               <span class="marquee-content">
                   ПЛК не Подключен...     Файл не загружен... &nbsp;&nbsp;&nbsp;
               </span>
@@ -34,11 +39,13 @@
     <!-- ✅ Левый сайдбар — первый, как и положено слева -->
      <!--NOTE src/windows/main/styles/sidebar.css-->
       <aside id="sidebar-left" class="sidebar sidebar-left">
+        <!--NOTE src/windows/main/styles/sidebar.css-->
         <button class="toggle-btn-left" title="Показать панель">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
           </svg>
         </button>
+        <!--NOTE src/windows/main/styles/sidebar.css-->
         <div class="sidebar-content">
           
           <!--NOTE src/windows/main/styles/titlebar.css-->
@@ -46,11 +53,12 @@
             <h3>Слои графиков</h3>
             <button id="toggle-all" class="btn-smart">Все/Ничего</button>
           </div>
-
+          <!--NOTE src/windows/main/styles/base.css-->
           <div class="layers-list">
               <!-- Группа Плотность -->
             <details open>
               <summary>Плотность (2)</summary>
+              <!--NOTE src/windows/main/styles/components/check_boxs/check_boxs.css-->
               <div class="checkbox-grid">
                 <label><input type="checkbox" data-series="recirc_density">Рецирк</label>
                 <label><input type="checkbox" data-series="downhole_density">Забой</label>
@@ -105,7 +113,9 @@
             </details>
 
             <!--Кнопка применить-->
+            <!--NOTE src/windows/main/styles/base.css-->
             <div class="sidebar-footer">
+              <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
               <button class="btn-action">Применить</button>
             </div>
           </div>
@@ -113,23 +123,31 @@
       </aside>
 
         <!-- График по центру -->
+      <!--NOTE src/windows/main/styles/base.css-->
       <div id="chart-container"></div>
 
        <!-- Правый сайдбар — последний -->
+      <!--NOTE src/windows/main/styles/sidebar.css-->
       <aside id="sidebar-right" class="sidebar sidebar-right">
+        <!--NOTE src/windows/main/styles/sidebar.css-->
         <button class="toggle-btn" title="Показать панель">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
         </button>
-
-        <div class="sidebar-content">          
+        <!--NOTE src/windows/main/styles/sidebar.css-->
+        <div class="sidebar-content">
+           <!--NOTE src/windows/main/styles/sidebar.css-->
            <h3 class="label-up">Управление системой</H3>
-
+          <!--NOTE src/windows/main/styles/base.css-->
           <div class="right-layers-list">
+            <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
             <button class="cool-button">Загрузить план работ</button>
+            <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
             <details class="collapse-block">
+            <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
             <summary class="collapse-title">Работа</summary>
+              <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
               <div class="collapse-content">
                 <p>План работ не загружен...</p>
                 <code>0xdeadbeef</code>
@@ -139,6 +157,7 @@
                       <!-- Рецепты -->
             <details>
               <summary>Рецепты (6)</summary>
+              <!--NOTE src/windows/main/styles/components/check_boxs/check_boxs.css-->
               <div class="checkbox-recept">
                 <label><input type="checkbox" > Рецепт 1 </label>
                 <label><input type="checkbox" > Рецепт 2 </label>
@@ -150,8 +169,11 @@
             </details>
 
             <!--Кнопка старт-->
+            <!--NOTE src/windows/main/styles/base.css-->
             <div class="sidebar-footer">
+              <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
               <button class="start-button"> Старт </button>
+              <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
               <button class="stop-button"> Стоп </button>
             </div>
 
