@@ -36,11 +36,9 @@ csv = "1.4.0"
 empty_line_after_doc_comments = "allow"
 io_other_error = "allow"
 redundant_closure = "allow"
+needless_borrow = "allow"
+enum_variant_names = "allow"
 
 [lints.rust]
 unused_imports = "allow"
 dead_code = "allow"
-
-[lints.clippy]
-needless_borrow = "allow"
-enum_variant_names = "allow"
