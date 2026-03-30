@@ -40,5 +40,5 @@ jobs:
           label: "🔨 Build"
           message: ${{ job.status }}  # success / failure / cancelled
           color: ${{ job.status == 'success' && 'brightgreen' || 'red' }}
-          logo: 'githubactions'
+          namedLogo: 'githubactions'
           style: 'for-the-badge'
