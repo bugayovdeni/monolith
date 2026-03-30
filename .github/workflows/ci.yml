@@ -35,8 +35,8 @@ jobs:
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.GIST_SECRET }}
-          gistID: abc123xyz  # ← ВСТАВЬТЕ ВАШ GIST ID
-          filename: my-badge.json
+          gistID: 7d296631c4aa401c7a4dfa43cfeac397  # ← ВСТАВЬТЕ ВАШ GIST ID
+          filename: badge.json
           label: "🔨 Build"
           message: ${{ job.status }}  # success / failure / cancelled
           color: ${{ job.status == 'success' && 'brightgreen' || 'red' }}
