@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-           # ... ваши существующие шаги ...
+        
 
       # 🔹 Шаг: Генерация кастомного бейджа
       - name: Generate Custom Badge
@@ -35,7 +35,7 @@ jobs:
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.GIST_SECRET }}
-          gistID: 7d296631c4aa401c7a4dfa43cfeac397  # ← ВСТАВЬТЕ ВАШ GIST ID
+          gistID: ad700eae77d7761e803d9d80c93745ce  # ← ВСТАВЬТЕ ВАШ GIST ID
           filename: badge.json
           label: "🔨 Build"
           message: ${{ job.status }}  # success / failure / cancelled
