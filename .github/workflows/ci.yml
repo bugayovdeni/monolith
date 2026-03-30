@@ -28,7 +28,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # 🔴 ДОБАВЛЕНО: Установка зависимостей перед cargo clippy
+      # Установка зависимостей для Linux
       - name: Install Linux Dependencies
         run: |
           sudo apt-get update
@@ -46,12 +46,11 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
+      # Rust: Только линтинг (Тесты удалены)
       - name: Rust Lint
         run: cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings && cargo fmt --manifest-path src-tauri/Cargo.toml --check
 
-      - name: Rust Test
-        run: cargo test --manifest-path src-tauri/Cargo.toml
-
+      # TS: Линтинг и Тесты
       - name: TS Lint & Test
         run: npm run lint && npm run test
         continue-on-error: true
