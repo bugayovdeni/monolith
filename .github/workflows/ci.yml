@@ -27,22 +27,18 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      # ... ваши шаги сборки ...
+           # ... ваши существующие шаги ...
 
-      # Шаг: Создание кастомного бейджа с результатом
-      - name: Generate Dynamic Badge
-        if: always() # Запускать даже если сборка упала
+      # 🔹 Шаг: Генерация кастомного бейджа
+      - name: Generate Custom Badge
+        if: always()  # Запускать всегда, даже если сборка упала
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
-          # Токен с правами на редактирование ваших гистов
           auth: ${{ secrets.GIST_SECRET }}
-          # ID вашего гиста
-          gistID: gist:7d296631c4aa401c7a4dfa43cfeac397
-          # Имя файла в гисте
-          filename: badge.json
-          # Логика цвета: если успех - зеленый, иначе - красный
-          label: "Моя Проверка"
-          message: ${{ job.status }}
-          valColorRange: ${{ job.status }}
-          minColorRange: 0
-          maxColorRange: 1
+          gistID: abc123xyz  # ← ВСТАВЬТЕ ВАШ GIST ID
+          filename: my-badge.json
+          label: "🔨 Build"
+          message: ${{ job.status }}  # success / failure / cancelled
+          color: ${{ job.status == 'success' && 'brightgreen' || 'red' }}
+          logo: 'githubactions'
+          style: 'for-the-badge'
