@@ -1,6 +1,6 @@
 # Monolith
 # Tauri + Vanilla TS
-[![Build Status](https://gist.githubusercontent.com/bugayovdeni/ad700eae77d7761e803d9d80c93745ce/raw/badge.json)](https://github.com/bugayovdeni/monolith/actions)
+[![Build Status](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bugayovdeni/ad700eae77d7761e803d9d80c93745ce/raw/badge.json)](https://github.com/bugayovdeni/monolith/actions)
 
 This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
 
