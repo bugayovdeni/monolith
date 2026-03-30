@@ -40,3 +40,7 @@ redundant_closure = "allow"
 [lints.rust]
 unused_imports = "allow"
 dead_code = "allow"
+
+[lints.clippy]
+needless_borrow = "allow"
+enum_variant_names = "allow"
