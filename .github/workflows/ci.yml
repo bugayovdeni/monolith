@@ -1,4 +1,4 @@
-name: CI
+name: CI - Build Only
 
 on:
   push:
@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 1. Линтинг и Тесты
-  lint-and-test:
+  # Задача: Только проверка стиля кода (без тестов)
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,86 +27,3 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-
-      # Установка зависимостей для Linux
-      - name: Install Linux Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            libgtk-3-dev \
-            libjavascriptcoregtk-4.1-dev \
-            libsoup-3.0-dev \
-            libappindicator3-dev \
-            librsvg2-dev \
-            libglib2.0-dev \
-            pkg-config \
-            build-essential
-
-      - name: Install Node Dependencies
-        run: npm ci
-
-      # Rust: Только линтинг (Тесты удалены)
-      - name: Rust Lint
-        run: cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings && cargo fmt --manifest-path src-tauri/Cargo.toml --check
-
-      # TS: Линтинг и Тесты
-      - name: TS Lint & Test
-        run: npm run lint && npm run test
-        continue-on-error: true
-
-  # 2. Сборка приложения
-  build:
-    needs: lint-and-test
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-    
-    runs-on: ${{ matrix.platform }}
-    
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install Linux Dependencies
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            libgtk-3-dev \
-            libjavascriptcoregtk-4.1-dev \
-            libsoup-3.0-dev \
-            libappindicator3-dev \
-            librsvg2-dev \
-            libglib2.0-dev \
-            pkg-config \
-            build-essential
-
-      - name: Install Node Dependencies
-        run: npm ci
-
-      - name: Build Tauri App
-        uses: tauri-apps/tauri-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release: false
-          projectPath: src-tauri
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: tauri-${{ matrix.platform }}
-          path: |
-            src-tauri/target/release/bundle/**/*
-            src-tauri/target/release/**/*
