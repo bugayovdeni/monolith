@@ -1,7 +1,6 @@
 # Monolith
 # Tauri + Vanilla TS
 
-[![CI](https://github.com/Bodden007/CCD/actions/workflows/ci.yml/badge.svg)](https://github.com/Bodden007/CCD/actions/workflows/ci.yml)
 
 This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
 
