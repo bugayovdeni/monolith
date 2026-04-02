@@ -98,16 +98,16 @@ mod poc_debug_tests {
         // ================================
         // 👇 ПУТЬ СЮДА 👇
         // ================================
-        let HARDCODED_PATH = r#"path"#;
+        let hardcoded_path = r#"path"#;
         // ================================
 
-        println!("\n🔍 [POC] Проверяем файл: {}", HARDCODED_PATH);
+        println!("\n🔍 [POC] Проверяем файл: {}", hardcoded_path);
 
         // Guard: проверяем, что файл вообще есть
         assert!(
-            Path::new(HARDCODED_PATH).exists(),
+            Path::new(hardcoded_path).exists(),
             "❌ Файл не найден: {}. Положи его туда или поправь путь.",
-            HARDCODED_PATH
+            hardcoded_path
         );
 
         let manager = CsvManager::new();
