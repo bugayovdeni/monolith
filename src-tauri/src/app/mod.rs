@@ -1,3 +1,4 @@
+pub mod dialogs;
 pub mod exit_app;
 pub mod handler;
 pub mod menu_app;

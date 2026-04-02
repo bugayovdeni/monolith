@@ -14,7 +14,7 @@ pub fn close(app_handle: &AppHandle) {
     app_handle
         .dialog()
         .message("Подтверждаете Выход?")
-        .title("Выход из Программы")
+        .title("Monolith: Выход из Программы")
         .buttons(MessageDialogButtons::OkCancelCustom(
             "Да".to_string(),
             "Нет".to_string(),

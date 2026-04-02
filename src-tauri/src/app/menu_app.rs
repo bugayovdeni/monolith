@@ -14,7 +14,13 @@ pub fn setup_menu(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         .text("quit", "Выход")
         .build()?;
 
-    let menu = MenuBuilder::new(app).items(&[&file_menu]).build()?;
+    let about_menu = SubmenuBuilder::new(app, "О программе")
+        .text("about_app", "О прграмме")
+        .build()?;
+
+    let menu = MenuBuilder::new(app)
+        .items(&[&file_menu, &about_menu])
+        .build()?;
 
     app.set_menu(menu)?;
 

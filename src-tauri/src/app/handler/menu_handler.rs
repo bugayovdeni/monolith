@@ -1,3 +1,4 @@
+use crate::app::dialogs::about_app::about as about_app;
 use crate::app::exit_app::close as close_app;
 use crate::app::handler::csv_path;
 use crate::services::csv_manager::CsvManager;
@@ -80,8 +81,12 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
                 });
             }
             "quit" => {
-                //TODO Перехватчик закрытия окна
+                //NOTE Перехватчик закрытия окна
                 close_app(&_app_handle);
+            }
+            "about_app" => {
+                //TODO перехватчик about app
+                about_app(&_app_handle);
             }
             _ => {
                 //FIXME Удалить print
