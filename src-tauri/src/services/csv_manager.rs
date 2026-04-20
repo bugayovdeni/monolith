@@ -113,7 +113,7 @@ mod poc_debug_tests {
         let manager = CsvManager::new();
 
         // 1. Грузим
-        let id = match manager.load_file(HARDCODED_PATH) {
+        let id = match manager.load_file(hardcoded_path) {
             Ok(id) => id,
             Err(e) => {
                 eprintln!("❌ Ошибка парсинга: {:?}", e);

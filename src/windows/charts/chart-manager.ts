@@ -1,9 +1,92 @@
+
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent, DataZoomComponent, TitleComponent } from 'echarts/components';
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  DataZoomComponent,
+  TitleComponent
+} from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
-echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent, DataZoomComponent, TitleComponent, CanvasRenderer]);
+echarts.use([
+  LineChart,
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  DataZoomComponent,
+  TitleComponent,
+  CanvasRenderer
+]);
+
+// ===== Конфиг группировки полей по осям =====
+export const FIELD_AXIS_MAP: Record<
+  string,
+  { group: string; axisIndex: number; label: string; min?: number; max?: number }
+> = {
+  // 0. Density
+  recirc_density: { group: 'density', axisIndex: 0, label: 'ppg', min: 8.0, max: 20.0 },
+  downhole_density: { group: 'density', axisIndex: 0, label: 'ppg', min: 8.0, max: 20.0 },
+
+  // 1. Pressure
+  ps_pressure: { group: 'pressure', axisIndex: 1, label: 'psi', max: 15000 },
+  ds_pressure: { group: 'pressure', axisIndex: 1, label: 'psi', max: 15000 },
+
+  // 2. Pump rates
+  ps_rate: { group: 'rate_bpm', axisIndex: 2, label: 'bpm' },
+  ds_rate: { group: 'rate_bpm', axisIndex: 2, label: 'bpm' },
+  combo_rate: { group: 'rate_bpm', axisIndex: 2, label: 'bpm' },
+
+  // 3. Water rate
+  mix_water_rate: { group: 'rate_gpm', axisIndex: 3, label: 'gpm' },
+
+  // 4. Pump totals
+  combo_pump_stg_ttl: { group: 'volume_bbl', axisIndex: 4, label: 'bbl' },
+  combo_pump_job_ttl: { group: 'volume_bbl', axisIndex: 4, label: 'bbl' },
+
+  // 5. Water totals
+  mix_wtr_stg_ttl: { group: 'volume_gal', axisIndex: 5, label: 'gal' },
+  mix_wtr_job_ttl: { group: 'volume_gal', axisIndex: 5, label: 'gal' },
+
+  // 6. Valves
+  cement_vlv_percent: { group: 'valves', axisIndex: 6, label: '%', min: 0, max: 100 },
+  wtr_vlv_percent: { group: 'valves', axisIndex: 6, label: '%', min: 0, max: 100 }
+};
+
+export const getAxisForField = (fieldId: string) => FIELD_AXIS_MAP[fieldId]?.axisIndex ?? 0;
+export const getFieldConfig = (fieldId: string) => FIELD_AXIS_MAP[fieldId] ?? null;
+
+export const getAxisConfig = (axisIndex: number) => {
+  const sample = Object.values(FIELD_AXIS_MAP).find(cfg => cfg.axisIndex === axisIndex);
+  if (!sample) return null;
+
+  const position: 'left' | 'right' = axisIndex === 0 ? 'left' : 'right';
+
+  return {
+    position,
+    name: sample.label,
+    nameLocation: 'middle' as const,
+    nameGap: 35,
+    min: sample.min,
+    max: sample.max,
+    scale: true,
+    splitLine: {
+      lineStyle: {
+        type: axisIndex === 0 ? 'solid' : 'dashed',
+        opacity: axisIndex === 0 ? 0.8 : 0.4
+      }
+    },
+    axisLabel: {
+      margin: 8,
+      formatter: (val: number) => {
+        if (sample.label === '%') return `${Math.round(val)}`;
+        return val >= 1000 ? `${(val / 1000).toFixed(1)}k` : `${val}`;
+      }
+    }
+  };
+};
+// ===== Конец конфига =====
 
 export type DataPoint = [number, number];
 
@@ -14,67 +97,287 @@ export interface SeriesConfig {
   visible?: boolean;
 }
 
+interface VisibleAxisState {
+  usedLogicalAxisIndices: number[];
+  logicalToRealAxisIndex: Map<number, number>;
+  rightAxisCount: number;
+  yAxis: any[];
+}
+
 export class ChartManager {
   private chart: echarts.ECharts | null = null;
   private container: HTMLElement;
   private resizeObserver: ResizeObserver | null = null;
   private seriesData: Map<string, DataPoint[]> = new Map();
   private seriesConfig: SeriesConfig[] = [];
-  private readonly MAX_POINTS = 1_000_000;
+
+  // Для 1 Гц лучше сначала держать не миллион, а более реалистичное окно
+  private readonly MAX_POINTS = 50_000;
 
   constructor(containerId: string, seriesConfigs: SeriesConfig[]) {
     const el = document.getElementById(containerId);
     if (!el) throw new Error(`Элемент "${containerId}" не найден`);
+
     this.container = el;
-    this.seriesConfig = seriesConfigs;
+    this.seriesConfig = seriesConfigs.map(cfg => ({
+      ...cfg,
+      visible: false
+    }));
+
     seriesConfigs.forEach(cfg => this.seriesData.set(cfg.id, []));
     this.init();
   }
 
   private init() {
     this.chart = echarts.init(this.container, null, { renderer: 'canvas' });
-    this.chart.setOption(this.buildOption());
+    this.chart.setOption(this.buildOption(), { notMerge: true });
     this.observeResize();
+
+    console.log('🔍 Реальные ID серий:', this.seriesConfig.map(c => c.id));
   }
 
   private buildOption() {
+    const visibleConfigs = this.getVisibleSeriesConfigs();
+
+    if (visibleConfigs.length === 0) {
+      return {
+        title: {
+          text: 'Нет выбранных графиков',
+          left: 'center',
+          top: 'middle'
+        },
+        tooltip: {},
+        legend: { data: [] },
+        xAxis: { type: 'category', data: [] },
+        yAxis: { type: 'value' },
+        series: []
+      };
+    }
+
+    const axisState = this.buildVisibleAxisState(visibleConfigs);
+    const visibleConfigByName = new Map(visibleConfigs.map(cfg => [cfg.name, cfg]));
+
     return {
-      tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
-      legend: { data: this.seriesConfig.map(cfg => cfg.name), type: 'scroll', bottom: 0 },
-      grid: { left: '3%', right: '4%', top: '40px', bottom: '40px', containLabel: true },
-      xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: (v: number) => new Date(v).toLocaleTimeString() } },
-      yAxis: { type: 'value', scale: true, splitLine: { lineStyle: { type: 'dashed' } } },
-      dataZoom: [{ type: 'inside', start: 0, end: 100 }, { type: 'slider', start: 0, end: 100, height: 20, bottom: 20 }],
-      series: this.seriesConfig.map(cfg => ({
-        name: cfg.name, type: 'line', smooth: false, showSymbol: false, 
-        lineStyle: { width: 2, color: cfg.color },
-        data: this.seriesData.get(cfg.id) || [],
-        sampling: 'lttb'
-      }))
+      animation: false,
+
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'cross' },
+        formatter: (params: any[]) => {
+          if (!params?.length) return '';
+
+          const time = new Date(params[0].axisValue).toLocaleTimeString();
+
+          const rows = params
+            .map(p => {
+              const cfg = visibleConfigByName.get(p.seriesName);
+              const fieldCfg = cfg ? getFieldConfig(cfg.id) : null;
+              const val = Array.isArray(p.value) ? p.value[1] : p.value;
+              const formattedVal = typeof val === 'number' ? val.toFixed(2) : val;
+
+              return `${p.marker} ${p.seriesName}: <b>${formattedVal} ${fieldCfg?.label || ''}</b>`;
+            })
+            .join('<br/>');
+
+          return `<b>${time}</b><br/>${rows}`;
+        }
+      },
+
+      legend: {
+        data: visibleConfigs.map(cfg => cfg.name),
+        type: 'scroll',
+        bottom: 0
+      },
+
+      grid: {
+        left: '50px',
+        right:
+          axisState.rightAxisCount > 0
+            ? `${80 + (axisState.rightAxisCount - 1) * 50}px`
+            : '40px',
+        top: '40px',
+        bottom: '40px',
+        containLabel: false
+      },
+
+      xAxis: {
+        type: 'time',
+        boundaryGap: false,
+        axisLabel: {
+          formatter: (v: number) => new Date(v).toLocaleTimeString()
+        }
+      },
+
+      yAxis: axisState.yAxis,
+
+      dataZoom: [
+        { id: 'insideZoom', type: 'inside', start: 0, end: 100 },
+        { id: 'sliderZoom', type: 'slider', start: 0, end: 100, height: 20, bottom: 20 }
+      ],
+
+      series: this.buildSeries(visibleConfigs, axisState.logicalToRealAxisIndex)
     };
   }
 
+  private buildVisibleAxisState(visibleConfigs: SeriesConfig[]): VisibleAxisState {
+    const usedLogicalAxisIndices = Array.from(
+      new Set(visibleConfigs.map(cfg => getAxisForField(cfg.id)))
+    ).sort((a, b) => a - b);
+
+    const logicalToRealAxisIndex = new Map<number, number>();
+    usedLogicalAxisIndices.forEach((logicalIdx, realIdx) => {
+      logicalToRealAxisIndex.set(logicalIdx, realIdx);
+    });
+
+    let rightAxisCount = 0;
+
+    const yAxis = usedLogicalAxisIndices.map(logicalIdx => {
+      const axisCfg = getAxisConfig(logicalIdx);
+      const isRight = axisCfg?.position === 'right';
+
+      let offset = 0;
+      if (isRight) {
+        offset = rightAxisCount * 55;
+        rightAxisCount++;
+      }
+
+      return {
+        type: 'value' as const,
+        scale: axisCfg?.scale ?? true,
+        position: axisCfg?.position ?? 'left',
+        offset,
+        name: axisCfg?.name,
+        nameLocation: axisCfg?.nameLocation ?? 'middle',
+        nameGap: axisCfg?.nameGap ?? 35,
+        min: axisCfg?.min,
+        max: axisCfg?.max,
+        splitLine: axisCfg?.splitLine,
+        axisLabel: axisCfg?.axisLabel
+      };
+    });
+
+    return {
+      usedLogicalAxisIndices,
+      logicalToRealAxisIndex,
+      rightAxisCount,
+      yAxis
+    };
+  }
+
+  private buildSeries(
+    visibleConfigs: SeriesConfig[],
+    logicalToRealAxisIndex: Map<number, number>
+  ) {
+    return visibleConfigs.map(cfg => {
+      const logicalAxisIdx = getAxisForField(cfg.id);
+      const realAxisIdx = logicalToRealAxisIndex.get(logicalAxisIdx) ?? 0;
+
+      return {
+        id: cfg.id,
+        name: cfg.name,
+        type: 'line',
+        smooth: false,
+        showSymbol: false,
+        yAxisIndex: realAxisIdx,
+        lineStyle: {
+          width: 2,
+          color: cfg.color
+        },
+        itemStyle: {
+          color: cfg.color
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: this.seriesData.get(cfg.id) || [],
+        sampling: 'lttb',
+        large: true,
+        largeThreshold: 2000,
+        progressive: 2000,
+        progressiveThreshold: 10000,
+        animation: false
+      };
+    });
+  }
+
   public updateData(points: Partial<Record<string, DataPoint>>) {
-    if (!this.chart) return;
     let hasUpdates = false;
+
     for (const [seriesId, point] of Object.entries(points)) {
       const data = this.seriesData.get(seriesId);
       if (!data || !point) continue;
+
       data.push(point);
-      if (data.length > this.MAX_POINTS) data.shift();
+
+      // Вместо shift() — пакетная обрезка
+      if (data.length > this.MAX_POINTS) {
+        data.splice(0, data.length - this.MAX_POINTS);
+      }
+
       hasUpdates = true;
     }
-    if (hasUpdates) {
-      this.chart.setOption({
-        series: this.seriesConfig.map(cfg => ({ name: cfg.name, data: this.seriesData.get(cfg.id) }))
-      });
+
+    if (!hasUpdates || !this.chart) return;
+
+    const visibleConfigs = this.getVisibleSeriesConfigs();
+    if (visibleConfigs.length === 0) return;
+
+    // Обновляем только данные серий, без полной пересборки осей / grid / legend
+    this.chart.setOption({
+      series: visibleConfigs.map(cfg => ({
+        id: cfg.id,
+        data: this.seriesData.get(cfg.id) || []
+      }))
+    });
+  }
+
+  public loadBulkData(bulkData: Record<string, DataPoint[]>) {
+    let hasUpdates = false;
+
+    for (const [seriesId, points] of Object.entries(bulkData)) {
+      const data = this.seriesData.get(seriesId);
+      if (!data) continue;
+
+      data.length = 0;
+      data.push(...points);
+
+      if (data.length > this.MAX_POINTS) {
+        data.splice(0, data.length - this.MAX_POINTS);
+      }
+
+      hasUpdates = true;
     }
+
+    if (hasUpdates && this.chart) {
+      this.chart.setOption(this.buildOption(), { notMerge: true });
+
+      const visibleConfigs = this.getVisibleSeriesConfigs();
+      if (visibleConfigs.length > 0) {
+        this.chart.dispatchAction({
+          type: 'dataZoom',
+          start: 95,
+          end: 100
+        });
+      }
+    }
+  }
+
+  public toggleSeriesVisibility(visibleIds: string[]) {
+    this.seriesConfig.forEach(cfg => {
+      cfg.visible = visibleIds.includes(cfg.id);
+    });
+
+    // Здесь оси могут реально измениться, поэтому rebuild оправдан
+    this.rebuildChart();
   }
 
   public clear() {
     this.seriesData.forEach((_, k) => this.seriesData.set(k, []));
-    this.chart?.clear();
-    this.chart?.setOption(this.buildOption());
+
+    if (!this.chart) return;
+
+    this.chart.clear();
+    this.chart.setOption(this.buildOption(), { notMerge: true });
   }
 
   private observeResize() {
@@ -87,122 +390,30 @@ export class ChartManager {
   }
 
   public destroy() {
-    if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+
     this.chart?.dispose();
     this.chart = null;
   }
 
   public zoomToEnd() {
-  this.chart?.setOption({
-    dataZoom: [{ start: 95, end: 100 }, { start: 95, end: 100 }]
+    this.chart?.setOption({
+      dataZoom: [
+        { id: 'insideZoom', start: 95, end: 100 },
+        { id: 'sliderZoom', start: 95, end: 100 }
+      ]
     });
   }
 
-  // 👇 Добавить в class ChartManager, после updateData:
-
-/** 
- * Загрузить данные оптом. 
- * bulkData: { seriesId: [ [ts, val], [ts, val], ... ] }
- */
-  public loadBulkData(bulkData: Record<string, DataPoint[]>) {
-    let hasUpdates = false;
-    
-    for (const [seriesId, points] of Object.entries(bulkData)) {
-      const data = this.seriesData.get(seriesId);
-      if (!data) continue;
-      
-      // Чистим старое и заливаем новое
-      data.length = 0;
-      data.push(...points);
-      
-      // Обрезаем, если вдруг больше лимита (на всякий)
-      if (data.length > this.MAX_POINTS) {
-        data.splice(0, data.length - this.MAX_POINTS);
-      }
-      hasUpdates = true;
-    }
-
-    if (hasUpdates && this.chart) {
-      this.chart.setOption({
-        series: this.seriesConfig.map(cfg => ({
-          name: cfg.name,
-          data: this.seriesData.get(cfg.id)
-        }))
-      });
-      // 👇 Зумим в конец, чтобы видеть последние данные
-      this.chart.dispatchAction({
-        type: 'dataZoom',
-        start: 95,
-        end: 100
-      });
-    }
+  private getVisibleSeriesConfigs(): SeriesConfig[] {
+    return this.seriesConfig.filter(cfg => cfg.visible === true);
   }
 
-/**
- * Обновляет видимость серий на графике
- * @param visibleIds - массив ID серий, которые нужно показать
- */
-/**
- * Обновляет видимость серий на графике
- * @param visibleIds - массив ID серий, которые нужно показать
- */
-  public toggleSeriesVisibility(visibleIds: string[]) {
+  private rebuildChart() {
     if (!this.chart) return;
-
-    // Обновляем внутренний стейт конфига
-    this.seriesConfig.forEach(cfg => {
-      cfg.visible = visibleIds.includes(cfg.id);
-    });
-
-  // Формируем новые опции для серий
-    const newSeriesOptions = this.seriesConfig.map(cfg => {
-      const isVisible = visibleIds.includes(cfg.id);
-      
-      return {
-        name: cfg.name,
-        type: 'line', // Обязательно указываем тип, иначе ECharts может тупить
-        show: isVisible, // ✅ Правильное свойство для показа/скрытия
-        data: isVisible ? (this.seriesData.get(cfg.id) || []) : [], // ✅ Пустые данные для скрытых
-        smooth: false,
-        showSymbol: false,
-        lineStyle: { width: 2, color: cfg.color },
-        sampling: 'lttb',
-        // Не забываем про зум, если он нужен
-        markLine: cfg.visible ? undefined : { silent: true } 
-      };
-    });
-
-    // Применяем опции. 
-    // Важно: не используем notMerge: true для всего графика, 
-    // иначе сбросим оси, тултипы и прочую херню.
-    // Мерджим только серии.
-    this.chart.setOption({
-      series: newSeriesOptions,
-      legend: { 
-        data: this.seriesConfig.filter(cfg => cfg.visible).map(cfg => cfg.name) 
-      }
-    }, { notMerge: false }); // false — чтобы не пересоздавать весь график
+    this.chart.setOption(this.buildOption(), { notMerge: true });
   }
-  // public toggleSeriesVisibility(visibleIds: string[]) {
-  //   if (!this.chart) return;
-
-  //   // Обновляем внутренний стейт конфига
-  //   this.seriesConfig.forEach(cfg => {
-  //     cfg.visible = visibleIds.includes(cfg.id);
-  //   });
-
-  //   // Применяем к графику: echarts скроет невидимые серии
-  //   this.chart.setOption({
-  //     series: this.seriesConfig.map(cfg => ({
-  //       name: cfg.name,
-  //       visible: cfg.visible, // echarts поймёт этот намёк
-  //       // Если нужно полностью убирать данные из рендера, а не просто скрыть:
-  //       // data: cfg.visible ? this.seriesData.get(cfg.id) : [] 
-  //     })),
-  //     // Легенду тоже не помешает обновить, если она есть
-  //     legend: { 
-  //       data: this.seriesConfig.filter(cfg => cfg.visible).map(cfg => cfg.name) 
-  //     }
-  //   });
-  // }
 }
