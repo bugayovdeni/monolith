@@ -10,44 +10,51 @@
 
   <body>
     <!--NOTE src/windows/main/styles/titlebar.css-->
-    <div class="titlebar">        
+    <div class="titlebar">
       <!-- Логотип и Название -->
       <!--NOTE src/windows/main/styles/titlebar.css-->
       <div class="app-identity">
         <!-- Эмблема -->
         <!-- <img src="" alt="Monolith Logo" class="app-logo" />  -->
         <!--NOTE src/windows/main/styles/titlebar.css-->
-        <span class="app-name"> БУРСЕРВИС <span style="font-size: 0.7em; opacity: 0.7;"> v0.1.0 beta </span></span>
-      </div>        
-      
+        <span class="app-name">
+          БУРСЕРВИС
+          <span style="font-size: 0.7em; opacity: 0.7">
+            v0.1.0 beta
+          </span></span
+        >
+      </div>
+
       <!-- Дорожка -->
-          <!-- Контейнер, который режет всё лишнее -->
+      <!-- Контейнер, который режет всё лишнее -->
       <!--NOTE src/windows/main/styles/titlebar.css-->
       <div class="marquee-container">
-          <!-- Дорожка, которая будет ездить -->
+        <!-- Дорожка, которая будет ездить -->
+        <!--NOTE src/windows/main/styles/titlebar.css-->
+        <div class="marquee-track">
           <!--NOTE src/windows/main/styles/titlebar.css-->
-          <div class="marquee-track">
-              <!--NOTE src/windows/main/styles/titlebar.css-->
-              <span class="marquee-content">
-                  ПЛК не Подключен...     Файл не загружен... &nbsp;&nbsp;&nbsp;
-              </span>
-          </div>
+          <span class="marquee-content">
+            ПЛК не Подключен... Файл не загружен... &nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
       </div>
     </div>
     <!--NOTE src/windows/main/styles/base.css-->
-    <main class="container">      
-    <!-- ✅ Левый сайдбар — первый, как и положено слева -->
-     <!--NOTE src/windows/main/styles/sidebar.css-->
+    <main class="container">
+      <!-- ✅ Левый сайдбар — первый, как и положено слева -->
+      <!--NOTE src/windows/main/styles/sidebar.css-->
       <aside id="sidebar-left" class="sidebar sidebar-left hidden">
         <!--NOTE src/windows/main/styles/sidebar.css-->
         <button class="toggle-btn-left" title="Показать панель">
-          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
-            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          <svg
+            viewBox="0 0 24 24"
+            style="width: 16px; height: 16px; fill: white"
+          >
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
           </svg>
         </button>
         <!--NOTE src/windows/main/styles/sidebar.css-->
         <div class="sidebar-content">
-          
           <!--NOTE src/windows/main/styles/titlebar.css-->
           <div class="panel-header">
             <h3>Слои графиков</h3>
@@ -55,60 +62,114 @@
           </div>
           <!--NOTE src/windows/main/styles/base.css-->
           <div class="layers-list">
-              <!-- Группа Плотность -->
+            <!-- Группа Плотность -->
             <details open>
               <summary>Плотность (2)</summary>
               <!--NOTE src/windows/main/styles/components/check_boxs/check_boxs.css-->
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="recirc_density">Рецирк</label>
-                <label><input type="checkbox" data-series="downhole_density">Забой</label>
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="recirc_density"
+                  />Рецирк</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="downhole_density"
+                  />Забой</label
+                >
               </div>
-            </details>       
+            </details>
 
-              <!-- Группа Давление -->
+            <!-- Группа Давление -->
             <details open>
               <summary>Давление (2)</summary>
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="ds_pressure">ВС</label>
-                <label><input type="checkbox" data-series="ps_pressure">ПС</label>
+                <label
+                  ><input type="checkbox" data-series="ds_pressure" />ВС</label
+                >
+                <label
+                  ><input type="checkbox" data-series="ps_pressure" />ПС</label
+                >
               </div>
             </details>
 
-              <!-- Группа Скорость -->
+            <!-- Группа Скорость -->
             <details>
               <summary>Скорость (4)</summary>
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="ds_rate">ВС</label>
-                <label><input type="checkbox" data-series="ps_rate">ПС</label>
-                <label><input type="checkbox" data-series="combo_rate">Общая</label>
-                <label><input type="checkbox" data-series="mix_water_rate">Рецирк</label>
+                <label><input type="checkbox" data-series="ds_rate" />ВС</label>
+                <label><input type="checkbox" data-series="ps_rate" />ПС</label>
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="combo_rate"
+                  />Общая</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="mix_water_rate"
+                  />Рецирк</label
+                >
               </div>
             </details>
 
-              <!-- Группа Объемы Стадия-->
+            <!-- Группа Объемы Стадия-->
             <details>
               <summary>Объемы Стадия (2)</summary>
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="combo_pump_stg_ttl">Насосами</label>
-                <label><input type="checkbox" data-series="mix_wtr_stg_ttl">Рецирк</label>
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="combo_pump_stg_ttl"
+                  />Насосами</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="mix_wtr_stg_ttl"
+                  />Рецирк</label
+                >
               </div>
             </details>
 
-              <!-- Группа Объемы Работа-->
+            <!-- Группа Объемы Работа-->
             <details>
               <summary>Объемы Работа (2)</summary>
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="combo_pump_job_ttl">Насосами</label>
-                <label><input type="checkbox" data-series="mix_wtr_job_ttl">Рецирк</label>
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="combo_pump_job_ttl"
+                  />Насосами</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="mix_wtr_job_ttl"
+                  />Рецирк</label
+                >
               </div>
             </details>
 
-              <!-- Группа Дозаторы-->
+            <!-- Группа Дозаторы-->
             <details>
               <summary>Дозаторы (2)</summary>
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="cement_vlv_percent">Цемент</label>
-                <label><input type="checkbox" data-series="wtr_vlv_percent">Вода</label>
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="cement_vlv_percent"
+                  />Цемент</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    data-series="wtr_vlv_percent"
+                  />Вода</label
+                >
               </div>
             </details>
 
@@ -122,31 +183,34 @@
         </div>
       </aside>
 
-        <!-- График по центру -->
+      <!-- График по центру -->
       <!--NOTE src/windows/main/styles/base.css-->
       <div id="chart-container"></div>
 
-       <!-- ✅ Правый сайдбар — последний -->
+      <!-- ✅ Правый сайдбар — последний -->
       <!--NOTE src/windows/main/styles/sidebar.css-->
       <aside id="sidebar-right" class="sidebar sidebar-right hidden">
         <!--NOTE src/windows/main/styles/sidebar.css-->
         <button class="toggle-btn" title="Показать панель">
-          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;">
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          <svg
+            viewBox="0 0 24 24"
+            style="width: 16px; height: 16px; fill: white"
+          >
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
           </svg>
         </button>
         <!--NOTE src/windows/main/styles/sidebar.css-->
         <div class="sidebar-content">
-           <!--NOTE src/windows/main/styles/sidebar.css-->
-           <h3 class="label-up">Управление системой</H3>
+          <!--NOTE src/windows/main/styles/sidebar.css-->
+          <h3 class="label-up">Управление системой</h3>
           <!--NOTE src/windows/main/styles/base.css-->
           <div class="right-layers-list">
             <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
             <button class="cool-button">Загрузить план работ</button>
             <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
             <details class="collapse-block">
-            <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
-            <summary class="collapse-title">Работа</summary>
+              <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
+              <summary class="collapse-title">Работа</summary>
               <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
               <div class="collapse-content">
                 <p>План работ не загружен...</p>
@@ -154,17 +218,17 @@
               </div>
             </details>
 
-                      <!-- Рецепты -->
+            <!-- Рецепты -->
             <details>
               <summary>Рецепты (6)</summary>
               <!--NOTE src/windows/main/styles/components/check_boxs/check_boxs.css-->
               <div class="checkbox-recept">
-                <label><input type="checkbox" > Рецепт 1 </label>
-                <label><input type="checkbox" > Рецепт 2 </label>
-                <label><input type="checkbox" > Рецепт 3 </label>
-                <label><input type="checkbox" > Рецепт 4 </label>
-                <label><input type="checkbox" > Рецепт 5 </label>
-                <label><input type="checkbox" > Рецепт 6 </label>
+                <label><input type="checkbox" /> Рецепт 1 </label>
+                <label><input type="checkbox" /> Рецепт 2 </label>
+                <label><input type="checkbox" /> Рецепт 3 </label>
+                <label><input type="checkbox" /> Рецепт 4 </label>
+                <label><input type="checkbox" /> Рецепт 5 </label>
+                <label><input type="checkbox" /> Рецепт 6 </label>
               </div>
             </details>
 
@@ -172,16 +236,13 @@
             <!--NOTE src/windows/main/styles/base.css-->
             <div class="sidebar-footer">
               <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
-              <button class="start-button"> Старт </button>
+              <button class="start-button">Старт</button>
               <!--NOTE src/windows/main/styles/components/buttons/buttons.css-->
-              <button class="stop-button"> Стоп </button>
+              <button class="stop-button">Стоп</button>
             </div>
-
           </div>
-
         </div>
-        
       </aside>
-     </main>
+    </main>
   </body>
 </html>
