@@ -1,6 +1,11 @@
 use tauri::AppHandle;
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
 
+///
+/// ## Обработчик \
+/// ### О Программе
+///
+///
 pub fn about(app: &AppHandle) {
     let version = app.package_info().version.to_string();
     let message = format!(

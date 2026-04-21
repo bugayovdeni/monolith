@@ -6,9 +6,9 @@ pub enum CsvError {
     #[error("Файл не найден: {0}")]
     FileNotFound(String),
 
-    #[error("Нет прав на чтение файла: {0}")]
-    PermissionDenied(String),
-
+    //TODO Права чтения
+    // #[error("Нет прав на чтение файла: {0}")]
+    // PermissionDenied(String),
     #[error("Неверный формат имени файла: {0}. Ожидается DataYYYYMMDD_HHMM.csv")]
     InvalidFilename(String),
 
@@ -28,9 +28,9 @@ pub enum CsvError {
     #[error("Файл пустой или не содержит данных")]
     EmptyFile,
 
-    #[error("Ошибка кодировки файла: {0}")]
-    EncodingError(String),
-
+    //TODO Ошибка кодировки
+    // #[error("Ошибка кодировки файла: {0}")]
+    // EncodingError(String),
     #[error("Ошибка IO: {0}")]
     IoError(#[from] std::io::Error),
 

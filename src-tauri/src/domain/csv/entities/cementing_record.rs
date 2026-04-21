@@ -81,7 +81,8 @@ impl CementingRecord {
         }
     }
 
-    /// Проверить, что запись не пустая (хотя бы одно поле > 0)
+    //TODO Проверить, что запись не пустая (хотя бы одно поле > 0)
+    #[allow(dead_code)]
     pub fn is_non_zero(&self) -> bool {
         self.recirc_density > 0.00 || self.ps_pressure != 0.0 || self.cement_vlv_percent > 0
     }

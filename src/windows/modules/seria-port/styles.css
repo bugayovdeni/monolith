@@ -1,0 +1,80 @@
+#port-dialog {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+#port-dialog.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#port-dialog .modal-content {
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 10px;
+  padding: 24px;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  color: #e4e4e7;
+}
+#port-dialog .port-list {
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 12px 0;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+}
+#port-dialog .port-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #27272a;
+  font-size: 0.95rem;
+}
+#port-dialog .port-item:hover {
+  background: #27272a;
+}
+#port-dialog .port-item.selected {
+  background: #2563eb;
+  color: white;
+}
+#port-dialog .port-item:last-child {
+  border-bottom: none;
+}
+#port-dialog .modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+#port-dialog .modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  background: #3f3f46;
+  color: white;
+}
+#port-dialog .modal-actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+#port-dialog .modal-actions #btn-connect {
+  background: #2563eb;
+}
+#port-dialog .modal-actions #btn-close {
+  background: #52525b;
+}
+#port-dialog .status-text {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  min-height: 1.2em;
+}

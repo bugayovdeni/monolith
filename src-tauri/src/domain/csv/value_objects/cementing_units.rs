@@ -78,7 +78,8 @@ impl CementingUnits {
         }
     }
 
-    /// Получить единицу измерения по имени поля
+    //TODO Получить единицу измерения по имени поля
+    #[allow(dead_code)]
     pub fn get_by_field(&self, field_name: &str) -> Option<&str> {
         match field_name {
             "recirc_density" => Some(&self.recirc_density),
@@ -101,7 +102,8 @@ impl CementingUnits {
         }
     }
 
-    /// Получить единицу измерения по индексу поля (0-15)
+    //TODO Получить единицу измерения по индексу поля (0-15)
+    #[allow(dead_code)]
     pub fn get_by_index(&self, index: usize) -> Option<&str> {
         match index {
             0 => Some(&self.recirc_density),
@@ -124,7 +126,8 @@ impl CementingUnits {
         }
     }
 
-    /// Проверить, что все единицы заполнены (не пустые)
+    //TODO Проверить, что все единицы заполнены (не пустые)
+    #[allow(dead_code)]
     pub fn is_complete(&self) -> bool {
         !self.recirc_density.is_empty()
             && !self.downhole_density.is_empty()

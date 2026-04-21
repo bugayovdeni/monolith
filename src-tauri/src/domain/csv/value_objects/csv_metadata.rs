@@ -36,10 +36,14 @@ impl CsvMetadata {
         }
     }
 
+    //TODO Разобраться
+    #[allow(dead_code)]
     pub fn file_size_human(&self) -> String {
         Self::format_bytes(self.file_size_bytes)
     }
 
+    //TODO Разобраться
+    #[allow(dead_code)]
     pub fn memory_size_human(&self) -> String {
         Self::format_bytes(self.memory_size_bytes as u64)
     }
@@ -57,6 +61,8 @@ impl CsvMetadata {
         }
     }
 
+    //TODO Разобраться
+    #[allow(dead_code)]
     pub fn compression_ratio(&self) -> Option<f64> {
         if self.file_size_bytes == 0 {
             return None;
@@ -65,6 +71,8 @@ impl CsvMetadata {
         Some(ratio * 100.0)
     }
 
+    //TODO Разобраться
+    #[allow(dead_code)]
     pub fn is_within_limits(&self, max_memory_mb: usize) -> bool {
         let limit_bytes = max_memory_mb * 1024 * 1024;
         self.memory_size_bytes <= limit_bytes

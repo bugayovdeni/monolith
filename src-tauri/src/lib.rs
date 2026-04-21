@@ -5,7 +5,8 @@ use services::csv_manager::CsvManager;
 mod command;
 mod domain;
 mod services;
-use command::{cmd_greet::greet, csv_command::debug_serialize, csv_command::get_csv_data};
+use command::csv::{csv_command::debug_serialize, csv_command::get_csv_data};
+use command::serial_port::serial_dialog::open_port_dialog;
 //NOTE ИМПОРТ ТРЕЙТА MANAGER (Обязательно для работы get_webview_window)
 use tauri::Manager;
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -16,9 +17,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
             debug_serialize,
-            get_csv_data
+            get_csv_data,
+            open_port_dialog
         ])
         .setup(|app| {
             // Получаем главное окно по лейблу "main"

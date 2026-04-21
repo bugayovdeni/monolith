@@ -1,9 +1,10 @@
 // import { invoke } from "@tauri-apps/api/core";
 // import { listen } from "@tauri-apps/api/event";
 // import { getCurrentWindow } from '@tauri-apps/api/window';
+import { listen } from "@tauri-apps/api/event";
 import { ChartManager, SeriesConfig } from "../charts/chart-manager";
-//FIXME Logo
-// import logoSrc from '../../assets/monolith.svg';
+import { portDialog } from "../modules/seria-port/dialog";
+
 import {
   CsvManager,
   DEFAULT_SERIES_MAPPING,
@@ -53,11 +54,16 @@ window.addEventListener("DOMContentLoaded", async () => {
   } catch (err) {
     console.error("❌ Не удалось инициализировать CsvManager:", err);
   }
-  //FIXME LOGO
-  // const logo = document.querySelector('.app-logo') as HTMLImageElement
-  // if (logo) {
-  //   logo.src = logoSrc
-  // }
+
+  // === МОДАЛКА: ИНИЦИАЛИЗАЦИЯ ===
+  const anchor = document.getElementById("modals-anchor");
+  if (anchor) portDialog.init(anchor);
+
+  // === КНОПКА ОТКРЫТИЯ ===
+  const btnOpen = document.getElementById("твой-id-кнопки"); // например "menu-connect"
+  if (btnOpen) {
+    btnOpen.addEventListener("click", () => portDialog.open());
+  }
 });
 
 // ==== САЙДБАРЫ ====
@@ -122,4 +128,17 @@ applyBtn?.addEventListener("click", () => {
   console.log(
     `🎨 График обновлён. Видимые серии: ${visibleSeriesIds.join(", ") || "пусто"}`,
   );
+});
+
+// === ОБНОВЛЕНИЕ СТАТУСА ПРИ КОННЕКТЕ ===
+window.addEventListener("port:connected", (e: any) => {
+  const marquee = document.querySelector(".marquee-content");
+  if (marquee) {
+    marquee.textContent = `● ПЛК Подключен: ${e.detail} | Файл не загружен...`;
+  }
+});
+
+// === СЛУШАЕМ СОБЫТИЕ ОТ RUST ===
+listen("show-port-dialog", () => {
+  portDialog.open(); // 👈 Модалка вылезает, когда Раст прислал сигнал
 });
