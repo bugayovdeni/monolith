@@ -37,3 +37,9 @@ pub fn open_dialog(app: AppHandle) {
 pub fn get_ports() -> Vec<String> {
     serial_scanner::scan()
 }
+
+pub fn connect_port(port_name: &str) -> Result<(), String> {
+    let _port = monolith_serial::port::open_port(port_name).map_err(|e| e.to_string())?;
+
+    Ok(())
+}

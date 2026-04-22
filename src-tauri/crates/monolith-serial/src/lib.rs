@@ -10,4 +10,6 @@
 //! - open/close serial port
 //! - low-level read/write abstractions
 
+pub mod error;
+pub mod port;
 pub mod scanner;

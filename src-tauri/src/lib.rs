@@ -6,7 +6,9 @@ mod commands;
 mod domain;
 mod services;
 use commands::csv::{csv_command::debug_serialize, csv_command::get_csv_data};
-use commands::serial_port::{serial_dialog::open_port_dialog, serial_list::get_serial_ports};
+use commands::serial_port::{
+    serial_connect::connect_port, serial_dialog::open_port_dialog, serial_list::get_serial_ports,
+};
 //NOTE ИМПОРТ ТРЕЙТА MANAGER (Обязательно для работы get_webview_window)
 use tauri::Manager;
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -20,7 +22,8 @@ pub fn run() {
             debug_serialize,
             get_csv_data,
             open_port_dialog,
-            get_serial_ports
+            get_serial_ports,
+            connect_port
         ])
         .setup(|app| {
             // Получаем главное окно по лейблу "main"

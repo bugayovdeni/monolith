@@ -33,5 +33,5 @@
 // }
 
 pub fn scan() -> Vec<String> {
-    monolith_serial::scanner::scan_ports()
+    monolith_serial::scanner::scanner::scan_ports()
 }
