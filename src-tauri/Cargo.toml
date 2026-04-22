@@ -29,5 +29,5 @@ chrono = { version = "0.4.44", features = ["serde"] }
 uuid = { version = "1.22.0", features = ["serde", "v4"] }
 thiserror = "2.0.18"
 csv = "1.4.0"
-serialport = "4.9.0"
+monolith-serial = { path = "crates/monolith-serial" }
 

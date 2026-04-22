@@ -2138,9 +2138,9 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "csv",
+ "monolith-serial",
  "serde",
  "serde_json",
- "serialport",
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
@@ -2149,6 +2149,13 @@ dependencies = [
  "thiserror 2.0.18",
  "tokio",
  "uuid",
+]
+
+[[package]]
+name = "monolith-serial"
+version = "0.1.0"
+dependencies = [
+ "serialport",
 ]
 
 [[package]]
