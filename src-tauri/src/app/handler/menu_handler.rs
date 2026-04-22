@@ -1,7 +1,7 @@
 use crate::app::dialogs::about_app::about as about_app;
 use crate::app::exit_app::close as close_app;
 use crate::app::handler::csv_path;
-use crate::command::serial_port::serial_dialog::open_port_dialog;
+use crate::commands::serial_port::serial_dialog::open_port_dialog;
 use crate::services::csv_manager::CsvManager;
 use tauri::App;
 use tauri::AppHandle;
@@ -89,7 +89,7 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
                 //TODO Вызов модального окна для выбора порта
                 let handle = _app_handle.clone();
                 tauri::async_runtime::spawn(async move {
-                    let _ = open_port_dialog(handle).await;
+                    let _ = open_port_dialog(handle);
                 });
             }
             "about_app" => {

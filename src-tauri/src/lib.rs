@@ -2,11 +2,11 @@ mod app;
 use app::handler::{close_handler::close_event, menu_handler::menu_event};
 use app::menu_app::setup_menu;
 use services::csv_manager::CsvManager;
-mod command;
+mod commands;
 mod domain;
 mod services;
-use command::csv::{csv_command::debug_serialize, csv_command::get_csv_data};
-use command::serial_port::serial_dialog::open_port_dialog;
+use commands::csv::{csv_command::debug_serialize, csv_command::get_csv_data};
+use commands::serial_port::{serial_dialog::open_port_dialog, serial_list::get_serial_ports};
 //NOTE ИМПОРТ ТРЕЙТА MANAGER (Обязательно для работы get_webview_window)
 use tauri::Manager;
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -19,7 +19,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             debug_serialize,
             get_csv_data,
-            open_port_dialog
+            open_port_dialog,
+            get_serial_ports
         ])
         .setup(|app| {
             // Получаем главное окно по лейблу "main"

@@ -67,7 +67,7 @@ export class PortDialog {
     this.listEl.innerHTML = "";
 
     try {
-      const ports = await invoke<PortInfo[]>("scan_ports");
+      const ports = await invoke<string[]>("get_serial_ports");
       this.renderList(ports);
       this.statusEl.textContent = ports.length
         ? "✅ Выберите порт"
@@ -77,15 +77,15 @@ export class PortDialog {
     }
   }
 
-  private renderList(ports: PortInfo[]) {
+  private renderList(ports: string[]) {
     if (!this.listEl) return;
     this.listEl.innerHTML = "";
-    ports.forEach((p) => {
+    ports.forEach((port) => {
       const el = document.createElement("div");
       el.className = "port-item";
-      el.textContent = `${p.name} — ${p.description}`;
+      el.textContent = port;
       el.addEventListener("click", () => {
-        this.selectedPort = p.name;
+        this.selectedPort = port;
         this.btnConnect!.disabled = false;
         this.listEl!.querySelectorAll(".port-item").forEach((i) =>
           i.classList.remove("selected"),
