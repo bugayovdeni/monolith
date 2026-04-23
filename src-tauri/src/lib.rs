@@ -7,7 +7,8 @@ mod domain;
 mod services;
 use commands::csv::{csv_command::debug_serialize, csv_command::get_csv_data};
 use commands::serial_port::{
-    serial_connect::connect_port, serial_dialog::open_port_dialog, serial_list::get_serial_ports,
+    serial_ascii::start_ascii_stream_command, serial_connect::connect_port,
+    serial_dialog::open_port_dialog, serial_list::get_serial_ports,
 };
 //NOTE ИМПОРТ ТРЕЙТА MANAGER (Обязательно для работы get_webview_window)
 use tauri::Manager;
@@ -23,7 +24,8 @@ pub fn run() {
             get_csv_data,
             open_port_dialog,
             get_serial_ports,
-            connect_port
+            connect_port,
+            start_ascii_stream_command
         ])
         .setup(|app| {
             // Получаем главное окно по лейблу "main"

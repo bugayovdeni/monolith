@@ -2138,6 +2138,8 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "csv",
+ "monolith-ascii",
+ "monolith-domain",
  "monolith-serial",
  "serde",
  "serde_json",
@@ -2149,6 +2151,23 @@ dependencies = [
  "thiserror 2.0.18",
  "tokio",
  "uuid",
+]
+
+[[package]]
+name = "monolith-ascii"
+version = "0.1.0"
+dependencies = [
+ "monolith-domain",
+ "monolith-serial",
+ "serialport",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "monolith-domain"
+version = "0.1.0"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
