@@ -105,13 +105,24 @@ export class PortDialog {
       const res = await invoke<string>("connect_port", {
         portName: this.selectedPort,
       });
+
+      console.log("[FRONT] connect_port OK:", res);
+
+      await invoke("start_ascii_stream_command", {
+        portName: this.selectedPort,
+      });
+
+      console.log("[FRONT] start_ascii_stream_command OK:", this.selectedPort);
+
       this.statusEl.textContent = `✅ ${res}`;
-      // Кидаем событие наружу. main.ts подхватит и обновит статус-бар.
+
       window.dispatchEvent(
         new CustomEvent("port:connected", { detail: this.selectedPort }),
       );
+
       setTimeout(() => this.close(), 600);
     } catch (err: any) {
+      console.error("[FRONT] connect/start error:", err);
       this.statusEl.textContent = `❌ Не удалось подключиться: ${err.message || err}`;
       this.btnConnect.disabled = false;
     }

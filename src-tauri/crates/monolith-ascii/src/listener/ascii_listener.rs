@@ -1,3 +1,4 @@
+use std::io::ErrorKind;
 use std::io::Read;
 use std::sync::mpsc::{self, Receiver};
 use std::thread;
@@ -21,7 +22,10 @@ pub fn start_ascii_listener(mut port: Box<dyn SerialPort>) -> Receiver<Result<St
                     }
 
                     //FIXME Дебаг - удалить
-                    println!("RAW BYTES: {:?}", &temp[..bytes_read]);
+                    // println!(
+                    //     "[ASCII LISTENER] RAW TEXT: {:?}",
+                    //     String::from_utf8_lossy(&temp[..bytes_read])
+                    // );
 
                     buffer.extend_from_slice(&temp[..bytes_read]);
 
@@ -36,6 +40,9 @@ pub fn start_ascii_listener(mut port: Box<dyn SerialPort>) -> Receiver<Result<St
                             return;
                         }
                     }
+                }
+                Err(err) if err.kind() == ErrorKind::TimedOut => {
+                    continue;
                 }
                 Err(err) => {
                     let _ = tx.send(Err(AsciiError::ReadError(err.to_string())));
