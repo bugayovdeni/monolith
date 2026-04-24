@@ -1,5 +1,7 @@
 use std::io::ErrorKind;
 use std::io::Read;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver};
 use std::thread;
 
@@ -7,14 +9,17 @@ use serialport::SerialPort;
 
 use crate::error::ascii_error::AsciiError;
 
-pub fn start_ascii_listener(mut port: Box<dyn SerialPort>) -> Receiver<Result<String, AsciiError>> {
+pub fn start_ascii_listener(
+    mut port: Box<dyn SerialPort>,
+    stop: Arc<AtomicBool>,
+) -> Receiver<Result<String, AsciiError>> {
     let (tx, rx) = mpsc::channel();
 
     thread::spawn(move || {
         let mut buffer: Vec<u8> = Vec::new();
         let mut temp = [0u8; 1024];
 
-        loop {
+        while !stop.load(Ordering::Relaxed) {
             match port.read(&mut temp) {
                 Ok(bytes_read) => {
                     if bytes_read == 0 {

@@ -1,6 +1,7 @@
 // import { invoke } from "@tauri-apps/api/core";
 // import { listen } from "@tauri-apps/api/event";
 // import { getCurrentWindow } from '@tauri-apps/api/window';
+import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { ChartManager, SeriesConfig } from "../charts/chart-manager";
 import { portDialog } from "../modules/seria-port/dialog";
@@ -51,7 +52,9 @@ const csvManager = new CsvManager({
     if (dataMode !== "archive") return;
     chart.updateData(points);
   },
-  onBulkUpdate: (bulk) => {
+  onBulkUpdate: async (bulk) => {
+    await invoke("stop_serial");
+
     dataMode = "archive";
     chart.clear();
     chart.loadBulkData(bulk);
@@ -147,7 +150,7 @@ window.addEventListener("port:connected", (e: any) => {
 
   const marquee = document.querySelector(".marquee-content");
   if (marquee) {
-    marquee.textContent = `● ПЛК Подключен: ${e.detail} | Файл не загружен...`;
+    marquee.textContent = `● ПЛК Подключен: ${e.detail}`;
   }
 });
 
