@@ -31,11 +31,41 @@ const COLORS: Record<string, string> = {
   wtr_vlv_percent: "#d35400",
 };
 
+const SERIES_LABELS_RU: Record<string, string> = {
+  recirc_density: "Цирк Плотн",
+  downhole_density: "Забой Плотн",
+  mix_water_rate: "Расход воды",
+  combo_rate: "Общий расход",
+
+  ps_pressure: "Давление ПС",
+  ds_pressure: "Давление ДС",
+
+  mix_wtr_stg_ttl: "Вода Стадия",
+  mix_wtr_job_ttl: "Вода Работа",
+
+  combo_pump_stg_ttl: "Прокачка Стадия",
+  combo_pump_job_ttl: "Прокачка Всего",
+
+  cement_vlv_percent: "Цемент %",
+  wtr_vlv_percent: "Вода %",
+
+  ps_rate: "Расход ПС",
+  ds_rate: "Расход ДС",
+};
+
 // Конфиг серий
+// const chartSeries: SeriesConfig[] = Object.entries(DEFAULT_SERIES_MAPPING).map(
+//   ([id, name]) => ({
+//     id,
+//     name,
+//     color: COLORS[id],
+//     visible: ["ps_pressure", "recirc_density"].includes(id),
+//   }),
+// );
 const chartSeries: SeriesConfig[] = Object.entries(DEFAULT_SERIES_MAPPING).map(
   ([id, name]) => ({
     id,
-    name,
+    name: SERIES_LABELS_RU[id] ?? name,
     color: COLORS[id],
     visible: ["ps_pressure", "recirc_density"].includes(id),
   }),
