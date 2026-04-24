@@ -19,9 +19,7 @@
         <!--NOTE src/windows/main/styles/titlebar.css-->
         <span class="app-name">
           БУРСЕРВИС
-          <span style="font-size: 0.7em; opacity: 0.7">
-            v0.1.0 beta
-          </span></span
+          <span style="font-size: 0.7em; opacity: 0.7"> v0.0.1 dev </span></span
         >
       </div>
 
@@ -67,18 +65,26 @@
               <summary>Плотность (2)</summary>
               <!--NOTE src/windows/main/styles/components/check_boxs/check_boxs.css-->
               <div class="checkbox-grid">
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="recirc_density"
-                  />Рецирк</label
-                >
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="downhole_density"
-                  />Забой</label
-                >
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="recirc_density"
+                    type="button"
+                  ></button>
+
+                  <input type="checkbox" data-series="recirc_density" />
+                  Цирк
+                </label>
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="downhole_density"
+                    type="button"
+                  ></button>
+
+                  <input type="checkbox" data-series="downhole_density" />
+                  Забой
+                </label>
               </div>
             </details>
 
@@ -86,12 +92,24 @@
             <details open>
               <summary>Давление (2)</summary>
               <div class="checkbox-grid">
-                <label
-                  ><input type="checkbox" data-series="ds_pressure" />ВС</label
-                >
-                <label
-                  ><input type="checkbox" data-series="ps_pressure" />ПС</label
-                >
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="ds_pressure"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="ds_pressure" />
+                  ВС
+                </label>
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="ps_pressure"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="ps_pressure" />
+                  ПС
+                </label>
               </div>
             </details>
 
@@ -99,20 +117,42 @@
             <details>
               <summary>Скорость (4)</summary>
               <div class="checkbox-grid">
-                <label><input type="checkbox" data-series="ds_rate" />ВС</label>
-                <label><input type="checkbox" data-series="ps_rate" />ПС</label>
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="combo_rate"
-                  />Общая</label
-                >
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="mix_water_rate"
-                  />Рецирк</label
-                >
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="ds_rate"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="ds_rate" />
+                  ВС
+                </label>
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="ps_rate"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="ps_rate" />
+                  ПС
+                </label>
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="combo_rate"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="combo_rate" />
+                  Общ
+                </label>
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="mix_water_rate"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="mix_water_rate" />
+                  Вода
+                </label>
               </div>
             </details>
 
@@ -120,18 +160,25 @@
             <details>
               <summary>Объемы Стадия (2)</summary>
               <div class="checkbox-grid">
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="combo_pump_stg_ttl"
-                  />Насосами</label
-                >
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="mix_wtr_stg_ttl"
-                  />Рецирк</label
-                >
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="combo_pump_stg_ttl"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="combo_pump_stg_ttl" />
+                  Общ
+                </label>
+
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="mix_wtr_stg_ttl"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="mix_wtr_stg_ttl" />
+                  Вода
+                </label>
               </div>
             </details>
 
@@ -139,18 +186,25 @@
             <details>
               <summary>Объемы Работа (2)</summary>
               <div class="checkbox-grid">
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="combo_pump_job_ttl"
-                  />Насосами</label
-                >
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="mix_wtr_job_ttl"
-                  />Рецирк</label
-                >
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="combo_pump_job_ttl"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="combo_pump_job_ttl" />
+                  Общ
+                </label>
+
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="mix_wtr_job_ttl"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="mix_wtr_job_ttl" />
+                  Вода
+                </label>
               </div>
             </details>
 
@@ -158,18 +212,24 @@
             <details>
               <summary>Дозаторы (2)</summary>
               <div class="checkbox-grid">
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="cement_vlv_percent"
-                  />Цемент</label
-                >
-                <label
-                  ><input
-                    type="checkbox"
-                    data-series="wtr_vlv_percent"
-                  />Вода</label
-                >
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="cement_vlv_percent"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="cement_vlv_percent" />
+                  Цемент
+                </label>
+                <label>
+                  <button
+                    class="series-color"
+                    data-color-series="wtr_vlv_percent"
+                    type="button"
+                  ></button>
+                  <input type="checkbox" data-series="wtr_vlv_percent" />
+                  Вода
+                </label>
               </div>
             </details>
 

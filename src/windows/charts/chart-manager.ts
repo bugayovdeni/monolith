@@ -413,9 +413,17 @@ export class ChartManager {
     }
   }
 
-  public toggleSeriesVisibility(visibleIds: string[]) {
+  public toggleSeriesVisibility(
+    visibleIds: string[],
+    seriesColors?: Record<string, string>,
+  ) {
     this.seriesConfig.forEach((cfg) => {
       cfg.visible = visibleIds.includes(cfg.id);
+
+      const color = seriesColors?.[cfg.id];
+      if (color) {
+        cfg.color = color;
+      }
     });
 
     // Здесь оси могут реально измениться, поэтому rebuild оправдан
@@ -466,5 +474,42 @@ export class ChartManager {
   private rebuildChart() {
     if (!this.chart) return;
     this.chart.setOption(this.buildOption(), { notMerge: true });
+  }
+
+  public setSeriesColor(seriesId: string, color: string) {
+    const cfg = this.seriesConfig.find((s) => s.id === seriesId);
+    if (cfg) {
+      cfg.color = color;
+    }
+
+    if (!this.chart) {
+      console.warn("Chart is not initialized");
+      return;
+    }
+
+    const option = this.chart.getOption() as any;
+
+    const updatedSeries = option.series?.map((s: any) => {
+      if (s.id !== seriesId) return s;
+
+      return {
+        ...s,
+        lineStyle: {
+          ...s.lineStyle,
+          color,
+        },
+        itemStyle: {
+          ...s.itemStyle,
+          color,
+        },
+      };
+    });
+
+    if (!updatedSeries) {
+      console.warn("Series not found in chart option");
+      return;
+    }
+
+    this.chart.setOption({ series: updatedSeries });
   }
 }

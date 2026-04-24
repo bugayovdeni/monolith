@@ -31,6 +31,8 @@ const COLORS: Record<string, string> = {
   wtr_vlv_percent: "#d35400",
 };
 
+const seriesColors: Record<string, string> = { ...COLORS };
+
 const SERIES_LABELS_RU: Record<string, string> = {
   recirc_density: "Цирк Плотн",
   downhole_density: "Забой Плотн",
@@ -53,15 +55,6 @@ const SERIES_LABELS_RU: Record<string, string> = {
   ds_rate: "Расход ДС",
 };
 
-// Конфиг серий
-// const chartSeries: SeriesConfig[] = Object.entries(DEFAULT_SERIES_MAPPING).map(
-//   ([id, name]) => ({
-//     id,
-//     name,
-//     color: COLORS[id],
-//     visible: ["ps_pressure", "recirc_density"].includes(id),
-//   }),
-// );
 const chartSeries: SeriesConfig[] = Object.entries(DEFAULT_SERIES_MAPPING).map(
   ([id, name]) => ({
     id,
@@ -166,7 +159,7 @@ applyBtn?.addEventListener("click", () => {
     .filter((id): id is string => !!id); // Отсеиваем undefined
 
   // Пинаем график
-  chart.toggleSeriesVisibility(visibleSeriesIds);
+  chart.toggleSeriesVisibility(visibleSeriesIds, seriesColors);
 
   console.log(
     `🎨 График обновлён. Видимые серии: ${visibleSeriesIds.join(", ") || "пусто"}`,
@@ -215,3 +208,39 @@ listen("ascii-record", (event) => {
 
   console.log("[FRONT] chart updated from ascii-record");
 });
+
+document
+  .querySelectorAll<HTMLButtonElement>("[data-color-series]")
+  .forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const btn = e.currentTarget as HTMLButtonElement;
+      const seriesId = btn.dataset.colorSeries;
+
+      if (!seriesId) return;
+
+      const input = document.createElement("input");
+      input.type = "color";
+      input.value = seriesColors[seriesId] ?? COLORS[seriesId] ?? "#ffffff";
+
+      input.style.position = "absolute";
+      input.style.left = "-9999px";
+
+      document.body.appendChild(input);
+
+      input.addEventListener("input", () => {
+        const color = input.value;
+
+        seriesColors[seriesId] = color;
+        chart.setSeriesColor(seriesId, color);
+
+        btn.style.background = color;
+        btn.dataset.color = color;
+      });
+
+      input.click();
+
+      input.addEventListener("change", () => {
+        input.remove();
+      });
+    });
+  });
