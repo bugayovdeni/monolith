@@ -40,12 +40,22 @@ const chartSeries: SeriesConfig[] = Object.entries(DEFAULT_SERIES_MAPPING).map(
   }),
 );
 
-// Создаём менеджер графика
+//NOTE Manager Chart
+//Создаём менеджер графика
 const chart = new ChartManager("chart-container", chartSeries);
+// === РЕЖИМ ДАННЫХ ===
+let dataMode: "idle" | "live" | "archive" = "idle";
 // Создаём CSV-менеджер и связываем с графиком
 const csvManager = new CsvManager({
-  onDataUpdate: (points) => chart.updateData(points),
-  onBulkUpdate: (bulk) => chart.loadBulkData(bulk),
+  onDataUpdate: (points) => {
+    if (dataMode !== "archive") return;
+    chart.updateData(points);
+  },
+  onBulkUpdate: (bulk) => {
+    dataMode = "archive";
+    chart.clear();
+    chart.loadBulkData(bulk);
+  },
 });
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -132,6 +142,9 @@ applyBtn?.addEventListener("click", () => {
 
 // === ОБНОВЛЕНИЕ СТАТУСА ПРИ КОННЕКТЕ ===
 window.addEventListener("port:connected", (e: any) => {
+  dataMode = "live";
+  chart.clear();
+
   const marquee = document.querySelector(".marquee-content");
   if (marquee) {
     marquee.textContent = `● ПЛК Подключен: ${e.detail} | Файл не загружен...`;
@@ -145,6 +158,8 @@ listen("show-port-dialog", () => {
 
 // === ASCII ПОТОК ИЗ RUST ===
 listen("ascii-record", (event) => {
+  if (dataMode !== "live") return;
+
   const raw = event.payload as Record<string, number>;
   const now = Date.now();
 
