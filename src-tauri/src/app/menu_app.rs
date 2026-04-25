@@ -19,12 +19,18 @@ pub fn setup_menu(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         .text("flecs", "Flecs")
         .build()?;
 
+    //TODO Графики - пределы осей
+    let chart_menu = SubmenuBuilder::new(app, "Графики")
+        .text("axis_auto", "Авторасширение осей")
+        .text("axis_manual", "Ручные пределы осей")
+        .build()?;
+
     let about_menu = SubmenuBuilder::new(app, "О программе")
-        .text("about_app", "О прграмме")
+        .text("about_app", "О программе")
         .build()?;
 
     let menu = MenuBuilder::new(app)
-        .items(&[&file_menu, &connection_menu, &about_menu])
+        .items(&[&file_menu, &connection_menu, &chart_menu, &about_menu])
         .build()?;
 
     app.set_menu(menu)?;

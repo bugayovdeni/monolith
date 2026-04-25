@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { getVersion } from "@tauri-apps/api/app";
 import { ChartManager } from "../charts/chart-manager";
 import { portDialog } from "../modules/seria-port/dialog";
 import { CsvManager } from "../../services/csv/csv-manager";
@@ -35,6 +36,14 @@ export function startMainApp() {
       await csvManager.init();
     } catch (err) {
       console.error("❌ Не удалось инициализировать CsvManager:", err);
+    }
+
+    //NOTE Версия
+    const versionEl = document.getElementById("app-version");
+
+    if (versionEl) {
+      const version = await getVersion();
+      versionEl.textContent = `v${version} DEV`;
     }
 
     initSidebars();
