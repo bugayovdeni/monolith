@@ -10,7 +10,10 @@ pub fn about(app: &AppHandle) {
     let version = app.package_info().version.to_string();
     let message = format!(
         "Monolith\n\
-        Версия: {}\n\
+        Версия: {} DEV\n\
+        \n\
+        \n\
+        Лицензия: Тестировщик\n\
         \n\
         БУРСЕРВИС \n\
         © 2026",
