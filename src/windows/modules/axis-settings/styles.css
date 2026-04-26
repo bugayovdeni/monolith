@@ -1,0 +1,61 @@
+
+.axis-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.axis-modal.hidden {
+  display: none !important;
+}
+
+.axis-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+}
+
+.axis-modal-content label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.axis-modal-content input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.axis-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.axis-modal {
+  display: flex !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.axis-modal.hidden {
+  display: none !important;
+}
+
+.axis-modal-content {
+  background: white !important;
+  color: black !important;
+  padding: 20px !important;
+  border-radius: 8px !important;
+  min-width: 300px !important;
+}

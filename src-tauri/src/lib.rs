@@ -1,12 +1,13 @@
 use std::sync::{Arc, Mutex};
 
 mod app;
-use app::handler::{close_handler::close_event, menu_handler::menu_event};
-use app::menu_app::setup_menu;
-use services::csv_manager::CsvManager;
 mod commands;
 mod domain;
 mod services;
+use app::handlers::{close_handler::close_event, menu_handler::menu_event};
+use app::menu_app::setup_menu;
+use services::csv_manager::CsvManager;
+
 use commands::csv::{csv_command::debug_serialize, csv_command::get_csv_data};
 use commands::serial_port::{
     serial_ascii::start_ascii_stream_command, serial_ascii::stop_serial,

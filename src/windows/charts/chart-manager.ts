@@ -8,6 +8,8 @@ import {
   TitleComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
+import { AxisState } from "./axis/axis-state";
+import type { AxisMode, AxisManualSettings } from "./axis/axis-types";
 
 echarts.use([
   LineChart,
@@ -143,6 +145,7 @@ export class ChartManager {
   private resizeObserver: ResizeObserver | null = null;
   private seriesData: Map<string, DataPoint[]> = new Map();
   private seriesConfig: SeriesConfig[] = [];
+  private axisState = new AxisState();
 
   // Для 1 Гц лучше сначала держать не миллион, а более реалистичное окно
   private readonly MAX_POINTS = 50_000;
@@ -282,6 +285,8 @@ export class ChartManager {
 
     let rightAxisCount = 0;
 
+    const isAutoExpand = this.axisState.isAutoExpand();
+
     const yAxis = usedLogicalAxisIndices.map((logicalIdx) => {
       const axisCfg = getAxisConfig(logicalIdx);
       const isRight = axisCfg?.position === "right";
@@ -292,6 +297,8 @@ export class ChartManager {
         rightAxisCount++;
       }
 
+      const manualRange = this.axisState.getManualRange(logicalIdx);
+
       return {
         type: "value" as const,
         scale: axisCfg?.scale ?? true,
@@ -300,8 +307,21 @@ export class ChartManager {
         name: axisCfg?.name,
         nameLocation: axisCfg?.nameLocation ?? "middle",
         nameGap: axisCfg?.nameGap ?? 35,
-        min: axisCfg?.min,
-        max: axisCfg?.max,
+
+        //FIXME ОСИ
+        // min: isAutoExpand ? undefined : axisCfg?.min,
+        // max: isAutoExpand ? undefined : axisCfg?.max,
+        min: this.axisState.isManual()
+          ? manualRange?.min
+          : isAutoExpand
+            ? undefined
+            : axisCfg?.min,
+
+        max: this.axisState.isManual()
+          ? manualRange?.max
+          : isAutoExpand
+            ? undefined
+            : axisCfg?.max,
         splitLine: axisCfg?.splitLine,
         axisLabel: axisCfg?.axisLabel,
       };
@@ -511,5 +531,98 @@ export class ChartManager {
     }
 
     this.chart.setOption({ series: updatedSeries });
+  }
+
+  //TODO Оси изменения
+  private applyAxisMode() {
+    if (this.axisState.isAutoExpand()) {
+      this.applyAutoExpandAxes();
+      return;
+    }
+
+    if (this.axisState.isManual()) {
+      this.applyManualAxes();
+      return;
+    }
+  }
+
+  private applyAutoExpandAxes() {
+    const chart = this.getChart();
+    if (!chart) return;
+
+    const visibleConfigs = this.getVisibleSeriesConfigs();
+    if (visibleConfigs.length === 0) return;
+
+    const axisState = this.buildVisibleAxisState(visibleConfigs);
+
+    chart.setOption({
+      yAxis: axisState.yAxis,
+    });
+
+    console.log("Apply auto expand axes");
+  }
+
+  private getChart(): echarts.ECharts | null {
+    if (!this.chart) {
+      console.warn("ChartManager: chart is not initialized");
+      return null;
+    }
+
+    return this.chart;
+  }
+
+  public setAxisMode(mode: AxisMode) {
+    this.axisState.setMode(mode);
+
+    if (mode === "auto_expand") {
+      this.axisState.clearManualRanges();
+    }
+
+    console.log("Axis mode:", this.axisState.getMode());
+
+    // пока просто перерисуем график
+    this.applyAxisMode();
+  }
+
+  //TODO ручной пересчет осей
+  public setManualAxisRange(axisIndex: number, min: number, max: number) {
+    this.axisState.setManualRange(axisIndex, min, max);
+
+    console.log("Manual axis range:", {
+      axisIndex,
+      min,
+      max,
+      mode: this.axisState.getMode(),
+    });
+
+    this.applyAxisMode();
+  }
+
+  private applyManualAxes() {
+    const chart = this.getChart();
+    if (!chart) return;
+
+    const visibleConfigs = this.getVisibleSeriesConfigs();
+    if (visibleConfigs.length === 0) return;
+
+    const axisState = this.buildVisibleAxisState(visibleConfigs);
+
+    chart.setOption({
+      yAxis: axisState.yAxis,
+    });
+
+    console.log("Apply manual axes");
+  }
+
+  public applyManualSettings(settings: AxisManualSettings) {
+    this.axisState.setManualSettings(settings);
+
+    console.log("Manual settings applied:", settings);
+
+    this.applyAxisMode();
+  }
+
+  public getManualAxisRange(axisIndex: number) {
+    return this.axisState.getManualRange(axisIndex);
   }
 }

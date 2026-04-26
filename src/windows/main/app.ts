@@ -9,6 +9,10 @@ import { initLiveData } from "../data/live/live-data.controller";
 import { initSidebars } from "../modules/sidebar/sidebar.controller";
 import { initSeriesPanel } from "../modules/series-panel/series-panel.controller";
 import { initColorPicker } from "../modules/series-panel/color-picker.controller";
+import {
+  initAxisSettingsModal,
+  openAxisSettingsModal,
+} from "../modules/axis-settings/axis-settings-modal";
 
 export function startMainApp() {
   const chart = new ChartManager("chart-container", chartSeries);
@@ -16,6 +20,15 @@ export function startMainApp() {
   let dataMode: "idle" | "live" | "archive" = "idle";
 
   initLiveData(chart, () => dataMode);
+
+  //FIXME Тест Удалить
+  // setTimeout(() => {
+  //   chart.applyManualSettings({
+  //     axisIndex: 0,
+  //     min: 10,
+  //     max: 12,
+  //   });
+  // }, 3000);
 
   const csvManager = new CsvManager({
     onDataUpdate: (points) => {
@@ -50,6 +63,8 @@ export function startMainApp() {
     initSeriesPanel(chart, seriesColors);
     initColorPicker(chart, seriesColors, COLORS);
 
+    initAxisSettingsModal(chart);
+
     const anchor = document.getElementById("modals-anchor");
     if (anchor) portDialog.init(anchor);
 
@@ -71,5 +86,13 @@ export function startMainApp() {
 
   listen("show-port-dialog", () => {
     portDialog.open();
+  });
+
+  listen<{ mode: "auto_expand" | "manual" }>("chart://axis-mode", (event) => {
+    chart.setAxisMode(event.payload.mode);
+  });
+
+  listen("chart://axis-settings-open", () => {
+    openAxisSettingsModal();
   });
 }
