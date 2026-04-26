@@ -13,6 +13,22 @@ const groupToAxisIndex: Record<string, number> = {
   valves: 6,
 };
 
+function fillInputsFromSelectedGroup() {
+  const groupSelect = document.getElementById(
+    "axis-group",
+  ) as HTMLSelectElement;
+  const minInput = document.getElementById("axis-min") as HTMLInputElement;
+  const maxInput = document.getElementById("axis-max") as HTMLInputElement;
+
+  if (!groupSelect || !minInput || !maxInput) return;
+
+  const axisIndex = groupToAxisIndex[groupSelect.value];
+  const range = chartRef?.getManualAxisRange(axisIndex);
+
+  minInput.value = range ? String(range.min) : "";
+  maxInput.value = range ? String(range.max) : "";
+}
+
 export function initAxisSettingsModal(chart: ChartManager) {
   chartRef = chart;
   const anchor = document.getElementById("modals-anchor");
@@ -26,6 +42,11 @@ export function initAxisSettingsModal(chart: ChartManager) {
   const modal = document.getElementById("axis-settings-modal");
   const closeBtn = document.getElementById("axis-close");
   const applyBtn = document.getElementById("axis-apply");
+  const groupSelect = document.getElementById("axis-group");
+
+  groupSelect?.addEventListener("change", () => {
+    fillInputsFromSelectedGroup();
+  });
 
   closeBtn?.addEventListener("click", () => {
     modal?.classList.add("hidden");
@@ -81,22 +102,9 @@ export function initAxisSettingsModal(chart: ChartManager) {
 
 export function openAxisSettingsModal() {
   const modal = document.getElementById("axis-settings-modal");
-  const groupSelect = document.getElementById(
-    "axis-group",
-  ) as HTMLSelectElement;
-  const minInput = document.getElementById("axis-min") as HTMLInputElement;
-  const maxInput = document.getElementById("axis-max") as HTMLInputElement;
+  if (!modal) return;
 
-  if (!modal || !groupSelect || !minInput || !maxInput) return;
-
-  const group = groupSelect.value;
-  const axisIndex = groupToAxisIndex[group];
-  const range = chartRef?.getManualAxisRange(axisIndex);
-
-  if (range) {
-    minInput.value = String(range.min);
-    maxInput.value = String(range.max);
-  }
+  fillInputsFromSelectedGroup();
 
   modal.classList.remove("hidden");
 }
