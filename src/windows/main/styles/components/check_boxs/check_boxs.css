@@ -79,3 +79,15 @@ details summary {
 details summary::-webkit-details-marker {
   display: none;
 }
+
+/* Цветной маркер серии — пока только тест для одного графика */
+.series-color {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  border-radius: 2px;
+  border: 1px solid #aaa;
+  background: #3498db;
+  cursor: pointer;
+  padding: 0;
+}

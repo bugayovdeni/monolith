@@ -1,8 +1,8 @@
 [package]
 name = "monolith"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Industrial real-time monitoring system"
+authors = ["BURSERVICE"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -29,4 +29,6 @@ chrono = { version = "0.4.44", features = ["serde"] }
 uuid = { version = "1.22.0", features = ["serde", "v4"] }
 thiserror = "2.0.18"
 csv = "1.4.0"
-
+monolith-serial = { path = "crates/monolith-serial" }
+monolith-ascii = { path = "crates/monolith-ascii" }
+monolith-domain = { path = "crates/monolith-domain" }

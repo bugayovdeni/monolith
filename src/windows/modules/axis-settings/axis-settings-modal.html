@@ -1,0 +1,33 @@
+<div id="axis-settings-modal" class="axis-modal hidden">
+  <div class="axis-modal-content">
+    <h3>Ручная настройка оси</h3>
+
+    <label>
+      Ось:
+      <select id="axis-group">
+        <option value="density">Плотность (ppg)</option>
+        <option value="pressure">Давление (psi)</option>
+        <option value="rate_bpm">Скорость (bpm)</option>
+        <option value="rate_gpm">Скорость воды (gpm)</option>
+        <option value="volume_bbl">Объем (bbl)</option>
+        <option value="volume_gal">Объем воды (gal)</option>
+        <option value="valves">Дозаторы (%)</option>
+      </select>
+    </label>
+
+    <label>
+      Min:
+      <input id="axis-min" type="number" />
+    </label>
+
+    <label>
+      Max:
+      <input id="axis-max" type="number" />
+    </label>
+
+    <div class="axis-actions">
+      <button id="axis-apply">Применить</button>
+      <button id="axis-close">Закрыть</button>
+    </div>
+  </div>
+</div>

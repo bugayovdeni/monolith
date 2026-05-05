@@ -54,7 +54,8 @@ impl CsvManager {
             .ok_or_else(|| CsvError::FileNotFound(format!("Файл с ID {} не найден в кэше", id)))
     }
 
-    /// Удалить файл из кэша
+    //TODO Удалить файл из кэша
+    #[allow(dead_code)]
     pub fn unload_file(&self, id: Uuid) -> bool {
         let mut cache = match self.cache.write() {
             Ok(guard) => guard,
@@ -63,14 +64,16 @@ impl CsvManager {
         cache.remove(&id).is_some()
     }
 
-    /// Очистить весь кэш
+    //TODO Очистить весь кэш
+    #[allow(dead_code)]
     pub fn clear_cache(&self) {
         if let Ok(mut cache) = self.cache.write() {
             cache.clear();
         }
     }
 
-    /// Получить список загруженных файлов
+    //TODO Получить список загруженных файлов
+    #[allow(dead_code)]
     pub fn list_files(&self) -> Vec<CementingData> {
         let cache = match self.cache.read() {
             Ok(guard) => guard,
@@ -98,22 +101,22 @@ mod poc_debug_tests {
         // ================================
         // 👇 ПУТЬ СЮДА 👇
         // ================================
-        let HARDCODED_PATH = r#"path"#;
+        let hardcoded_path = r#"path"#;
         // ================================
 
-        println!("\n🔍 [POC] Проверяем файл: {}", HARDCODED_PATH);
+        println!("\n🔍 [POC] Проверяем файл: {}", hardcoded_path);
 
         // Guard: проверяем, что файл вообще есть
         assert!(
-            Path::new(HARDCODED_PATH).exists(),
+            Path::new(hardcoded_path).exists(),
             "❌ Файл не найден: {}. Положи его туда или поправь путь.",
-            HARDCODED_PATH
+            hardcoded_path
         );
 
         let manager = CsvManager::new();
 
         // 1. Грузим
-        let id = match manager.load_file(HARDCODED_PATH) {
+        let id = match manager.load_file(hardcoded_path) {
             Ok(id) => id,
             Err(e) => {
                 eprintln!("❌ Ошибка парсинга: {:?}", e);

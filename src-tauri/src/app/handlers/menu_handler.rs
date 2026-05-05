@@ -1,13 +1,15 @@
+use crate::app::dialogs::about_app::about as about_app;
+use crate::app::events::charts::chart_events::{
+    AxisMode, AxisModePayload, AxisSettingsOpenPayload,
+};
 use crate::app::exit_app::close as close_app;
-use crate::app::handler::csv_path;
+use crate::app::handlers::csv_path;
+use crate::commands::serial_port::serial_dialog::open_port_dialog;
 use crate::services::csv_manager::CsvManager;
-use tauri::App;
-use tauri::AppHandle;
-use tauri::Emitter;
-use tauri::Manager;
+use tauri::{App, AppHandle, Emitter, Manager};
 
 ///
-/// ## Обработчик закрытия приложения
+/// ## Обработчик меню приложения
 /// из меню \
 ///
 /// *параметры* \
@@ -18,7 +20,7 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
     let app_handle = app_handle.clone();
     app.on_menu_event(move |_app_handle, event| {
         let app_handle = app_handle.clone();
-        //FIXME println!
+        //FIXME Дебаг println!
         println!("menu event: {:?}", event.id());
         match event.id().0.as_str() {
             "open" => {
@@ -28,13 +30,13 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
                     // 1. Получаем путь (мой красивый await)
                     let path = match csv_path::pick_file(&app_handle).await {
                         Ok(Some(p)) => {
-                            //FIXME println!
+                            //FIXME Дебаг println!
                             println!("путь получен {}", p.display());
                             p
                         }
                         Ok(None) => return, // Юзер нажал "Отмена" — просто выходим
                         Err(e) => {
-                            //FIXME println!
+                            //FIXME Дебаг println!
                             println!("Dialog error: {}", e);
                             return;
                         }
@@ -59,7 +61,7 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
                             if let Err(e) = app_handle.emit("csv://loaded", payload) {
                                 eprintln!("❌ Не удалось отправить событие: {}", e);
                             }
-                            //FIXME
+                            //FIXME Дебаг
                             println!("CSV данные получены");
                         }
                         Err(e) => {
@@ -73,18 +75,50 @@ pub fn menu_event(app: &App, app_handle: &AppHandle) {
                                 }),
                             );
                             eprintln!("❌ CSV ошибка: {}", e);
-                            //FIXME
+                            //FIXME Дебаг
                             println!("CSV ошибка");
                         }
                     }
                 });
             }
             "quit" => {
-                //TODO Перехватчик закрытия окна
+                //NOTE Перехватчик закрытия окна
                 close_app(&_app_handle);
             }
+            "flecs" => {
+                //TODO Вызов модального окна для выбора порта
+                let handle = _app_handle.clone();
+                tauri::async_runtime::spawn(async move {
+                    let _ = open_port_dialog(handle);
+                });
+            }
+            //NOTE Авторасширение осей графиков
+            "axis_auto" => {
+                let _ = app_handle.emit(
+                    "chart://axis-mode",
+                    AxisModePayload {
+                        mode: AxisMode::AutoExpand,
+                    },
+                );
+                //FIXME дебаг
+                println!("Авторасширение осей")
+            }
+            //NOTE Ручное переключение осей графиков
+            "axis_manual" => {
+                let _ = app_handle.emit(
+                    "chart://axis-settings-open",
+                    AxisSettingsOpenPayload { action: "open" },
+                );
+                //FIXME дебаг
+                println!("Ручное расширение осей")
+            }
+            "about_app" => {
+                //TODO перехватчик about app
+                about_app(&_app_handle);
+            }
+
             _ => {
-                //FIXME Удалить print
+                //FIXME Дебаг Удалить print
                 println!("unexpected menu event");
             }
         }

@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "monolith",
+        "title": "Monolith",
         "width": 800,
         "height": 600,
         "decorations": true,
