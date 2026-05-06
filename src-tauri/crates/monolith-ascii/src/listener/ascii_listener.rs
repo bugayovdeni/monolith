@@ -61,14 +61,42 @@ pub fn start_ascii_listener(
 }
 
 fn extract_line(buffer: &mut Vec<u8>) -> Option<Vec<u8>> {
-    let delimiter = b"\r\n";
+    // Поддержка трёх вариантов разделителей строк: \r\n (Windows), \n (Unix), \r (старый Mac)
+    // Приоритет: сначала ищем \r\n, затем \n, затем \r.
+    let mut position = None;
+    let mut delimiter_len = 0;
 
-    let position = buffer
-        .windows(delimiter.len())
-        .position(|window| window == delimiter)?;
+    // Поиск \r\n (два байта)
+    if buffer.len() >= 2 {
+        if let Some(idx) = buffer.windows(2).position(|w| w == b"\r\n") {
+            position = Some(idx);
+            delimiter_len = 2;
+        }
+    }
 
+    // Если \r\n не найден, ищем \n
+    if position.is_none() {
+        if let Some(idx) = buffer.iter().position(|&b| b == b'\n') {
+            position = Some(idx);
+            delimiter_len = 1;
+        }
+    }
+
+    // Если \n не найден, ищем \r
+    if position.is_none() {
+        if let Some(idx) = buffer.iter().position(|&b| b == b'\r') {
+            position = Some(idx);
+            delimiter_len = 1;
+        }
+    }
+
+    // Если ни один разделитель не найден, строка неполная
+    let position = position?;
+
+    // Извлекаем строку до разделителя
     let line = buffer[..position].to_vec();
-    buffer.drain(..position + delimiter.len());
+    // Удаляем строку вместе с разделителем из буфера
+    buffer.drain(..position + delimiter_len);
 
     Some(line)
 }
@@ -98,13 +126,36 @@ mod tests {
     }
 
     #[test]
-    fn extract_line_returns_none_for_incomplete_line() {
+    fn extract_line_returns_line_for_carriage_return() {
+        // Тест проверяет, что одиночный \r считается разделителем
         let mut buffer = b"abc\r".to_vec();
 
         let line = extract_line(&mut buffer);
 
+        assert_eq!(line, Some(b"abc".to_vec()));
+        assert!(buffer.is_empty());
+    }
+
+    #[test]
+    fn extract_line_returns_line_for_newline() {
+        // Тест проверяет, что \n считается разделителем
+        let mut buffer = b"xyz\n".to_vec();
+
+        let line = extract_line(&mut buffer);
+
+        assert_eq!(line, Some(b"xyz".to_vec()));
+        assert!(buffer.is_empty());
+    }
+
+    #[test]
+    fn extract_line_returns_none_for_no_delimiter() {
+        // Тест проверяет, что если в буфере нет ни одного разделителя, возвращается None
+        let mut buffer = b"abc".to_vec();
+
+        let line = extract_line(&mut buffer);
+
         assert_eq!(line, None);
-        assert_eq!(buffer, b"abc\r".to_vec());
+        assert_eq!(buffer, b"abc".to_vec());
     }
 
     #[test]

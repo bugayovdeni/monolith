@@ -1,12 +1,12 @@
 import { invoke } from "@tauri-apps/api/core"; // Для Tauri v2. Если v1 -> "@tauri-apps/api/tauri"
 import { createPortDialogTemplate } from "./template";
 import "./styles.css";
-
-interface PortInfo {
-  name: string;
-  description: string;
-}
-
+//------------------------------------------------------------------------------------
+// interface PortInfo {//объявлен, но никогда не используется поэтому закоментировал
+//   name: string;
+//   description: string;
+// }
+//------------------------------------------------------------------------------------
 export class PortDialog {
   private container: HTMLElement | null = null;
   private listEl: HTMLElement | null = null;

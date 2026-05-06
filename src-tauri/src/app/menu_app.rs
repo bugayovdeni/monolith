@@ -16,7 +16,7 @@ pub fn setup_menu(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         .build()?;
 
     let connection_menu = SubmenuBuilder::new(app, "Подключение")
-        .text("flecs", "Flecs")
+        .text("flecs", "Flecs_4-20")
         .build()?;
 
     //TODO Графики - пределы осей
